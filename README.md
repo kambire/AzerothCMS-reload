@@ -1,72 +1,102 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/FusionWowCMS/FusionCMS/main/writable/uploads/logo.png" alt="FusionCMS Logo" width="300" />
-  <h1>FusionCMS: Reloaded & Enhanced Edition</h1>
-  <p><strong>A beautifully enhanced open-source CMS for World of Warcraft Emulators, built on CodeIgniter 4 and Bootstrap. 🚀</strong></p>
+  <img src="https://raw.githubusercontent.com/FusionWowCMS/FusionCMS/main/writable/uploads/logo.png" alt="BlizzGeeks-CMS Logo" width="280" />
+</div>
+
+<h1 align="center">⚡ BlizzGeeks-CMS ⚡</h1>
+
+<div align="center">
+  <strong>The Ultimate Next-Generation CMS for World of Warcraft Private Servers</strong><br>
+  Built on CodeIgniter 4 | Secure | Fast | Highly Customizable
+</div>
+
+<br>
+
+<div align="center">
+  <img src="https://img.shields.io/badge/PHP-8.1%2B-blue.svg?style=flat-square&logo=php" alt="PHP Version">
+  <img src="https://img.shields.io/badge/Bootstrap-5.x-purple.svg?style=flat-square&logo=bootstrap" alt="Bootstrap">
+  <img src="https://img.shields.io/badge/Emulator-AzerothCore%20%7C%20TrinityCore-success.svg?style=flat-square" alt="Emulators">
+  <img src="https://img.shields.io/badge/Status-Fully%20Optimized-orange.svg?style=flat-square" alt="Status">
 </div>
 
 ---
 
-## 🌟 About This Fork
+## 📖 What is BlizzGeeks-CMS?
 
-Welcome to **FusionCMS: Reloaded**, a specialized version of the original FusionCMS project tailored to offer a significantly improved user experience, enhanced features, and critical bug fixes. We optimized it to be faster, more secure, and ready-to-deploy for modern World of Warcraft private servers.
+**BlizzGeeks-CMS** is a heavily modified and modernized fork of FusionCMS, meticulously crafted to provide Server Owners with the most reliable, visually stunning, and feature-rich web platform. 
 
----
-
-## 🚀 Key Improvements & Features Added
-
-### 📧 1. Marketing & Mass Mail System (New Module)
-We built an entirely new system right into the Admin Panel to manage your server's marketing campaigns:
-- **Admin Integration:** Accessible directly via the "Marketing" tab for server administrators.
-- **Queue System:** Implements batch email sending with configurable `emails_per_hour` limits to prevent spam-blockers and timeout issues.
-- **Campaign Tracking:** Keep track of your sent emails, subjects, and statuses inside the `mail_campaigns` and `mail_queue` tables.
-
-### 🖼️ 2. Revamped News Layout
-We replaced the default, cluttered news layout with a much cleaner, responsive **List View Layout**.
-- **No more broken thumbnails:** Removed forced thumbnails to give more space for the content.
-- **Typography focus:** Bigger headlines, readable text (`1.15rem`), and emphasized tags using the primary theme color.
-- **Global applicability:** This cleaner format was applied across the `default`, `heaven`, and core news themes.
-
-### 🔧 3. Critical Password Recovery & Captcha Fixes
-- **Captcha Generation Fixed:** Solved the notorious `imagecreatefromjpeg()` missing function error. The system now gracefully detects and generates `.png` fallbacks dynamically through GD library.
-- **SMTP & JSON Responses:** Fixed a core bug where password recovery emails would be sent, but the front-end would fail to parse the `JSON` response due to unexpected output headers.
-- **Clean Sender Names:** Emails are now sent with proper custom Server Names (e.g. `ServerName - Gaming Life`) instead of just generic tags, avoiding 500/503 errors from modern mail clients.
-
-### 🛍️ 4. Ready-to-use WOTLK Demo Store
-The `fusion_final_full.sql` was expanded to include a set of highly-requested demo items to test the Store system immediately after a fresh install:
-- **New Categories:** "Mounts & Pets" and "VIP & Services" with `FontAwesome` icons.
-- **Demo Items included:** `Invincible's Reins`, `Reins of the Swift Spectral Tiger`, and `Lil' K.T.`. Prices are fully pre-configured in Vote Points (VP) and Donation Points (DP).
-
-### ⚡ 5. Performance Improvements
-- Real-time Smarty caching has been properly configured for development and deployment to avoid the need of clearing Minify/Cache folders constantly.
+We took the core framework and stripped away all the annoying bugs, outdated layouts, and clunky mechanics, replacing them with optimized, beautiful features ready for production environments right out of the box.
 
 ---
 
-## 🛠️ Requirements
-- PHP 8.1 / 8.2 (with `gd`, `mbstring`, `curl`, `intl`, `json`, `mysqli` extensions enabled)
-- MySQL 5.7+ / MariaDB 10.4+
-- Apache / Nginx
-- World of Warcraft Emulator Database (AzerothCore, TrinityCore, etc.)
+## 🔥 Exclusive New Features & Overhauls
+
+### ✉️ Mass Marketing Built-In
+No more relying on third-party tools. Reach your players directly from your Admin Panel.
+- **Smart Queues:** Built-in email batching with customizable hourly limits to protect your server from being blacklisted.
+- **Campaign Dashboard:** Track active and pending campaigns via the `mail_campaigns` and `mail_queue` system natively integrated into the ACL permissions grid.
+
+### 📰 Modernized News Feeds
+We trashed the old "boxy" news layout that forced pixelated thumbnails. 
+- **Sleek List View:** News articles now display in a wide, gorgeous format focusing strictly on typography and content readability.
+- **Unified Aesthetics:** Perfect integration with both `Default` and `Heaven` themes without sacrificing responsiveness.
+
+### 🛡️ Ironclad Security & Core Fixes
+- **Intelligent Captcha Regeneration:** Exterminated the dreaded `Call to undefined function imagecreatefromjpeg()` error by implementing a dynamic GD Library `.png` fallback system.
+- **Password Recovery Saved:** Completely rebuilt the JSON output headers to prevent 500 errors and SMTP protocol clashes when users try to recover their accounts. Your password resets *actually* send emails now.
+
+### 🛍️ Plug-and-Play WOTLK Store
+Your database shouldn't be empty on a fresh install. Start monetizing or rewarding players instantly!
+- The fresh installation comes pre-loaded with **"Mounts & Pets"** and **"VIP & Services"** categories.
+- Features highly sought-after demo items: *Invincible's Reins, Reins of the Swift Spectral Tiger, and Lil' K.T.* configured seamlessly with Vote Points (VP) and Donation Points (DP).
+
+### ⚡ Caching Perfected
+Smarty Template caching has been reworked to eliminate the need for endless "Cache Clearing" during development or daily adjustments.
 
 ---
 
-## ⚙️ Installation
+## ⚙️ Server Requirements
 
-1. Clone this repository into your web root directory.
+To run **BlizzGeeks-CMS** flawlessly, your environment should meet the following specifications:
+
+| Requirement | Minimum Version | Required Extensions |
+| :--- | :---: | :--- |
+| **PHP** | `8.1` | `gd`, `mbstring`, `curl`, `intl`, `json`, `mysqli` |
+| **Database** | MySQL `5.7` / MariaDB `10.4` | |
+| **Web Server** | Apache / Nginx | `mod_rewrite` enabled |
+
+---
+
+## 🚀 Quick Setup Guide
+
+1. **Clone the Source Code**  
+   Pull the code directly into your web root:
    ```bash
    git clone https://github.com/kambire/FusionCMS-reload.git /var/www/html
    ```
-2. Configure your environment by copying `env` to `.env`.
-3. Give writable permissions to the `writable` and `public/uploads` directories.
-4. Import the `application/modules/install/SQL/fusion_final_full.sql` file into your empty website database.
-5. In your `.env` or `application/config/Database.php`, correctly link the Database to the newly created DB and to your `auth` / `characters` Emulator databases.
-6. Delete the `application/modules/install` folder for security reasons.
 
-Enjoy your server!
+2. **Environment Configuration**  
+   Copy the `env` file, rename it to `.env`, and configure your base URL. Set your database credentials in `.env` or `application/config/Database.php`.
+
+3. **Database Installation**  
+   Import the structural foundation into your empty website database:
+   ```text
+   📁 application/modules/install/SQL/fusion_final_full.sql
+   ```
+
+4. **Permissions & Security**  
+   Ensure the following directories are fully writable by the web server (`chmod -R 775`):
+   - `/writable`
+   - `/public/uploads`  
+   
+   ⚠️ *Crucial: Delete the `application/modules/install` folder after setup to prevent unwanted re-installations.*
 
 ---
 
-## 🤝 Contributing
-Contributions, issues, and feature requests are always welcome! Feel free to check the issues page or submit PRs.
+## 🎨 Theme Customization
+BlizzGeeks-CMS supports full customization. Tweak colors, layouts, and components directly from the Admin Panel or dive into the `.tpl` files located in the `application/themes/` directory for full HTML/Smarty control.
 
-## 📝 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+<br>
+
+<div align="center">
+  <sub>Developed with 💙 for the World of Warcraft Emulation Community by <b>Kambire</b> & Contributors.</sub>
+</div>
