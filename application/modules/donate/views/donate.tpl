@@ -16,7 +16,6 @@
 								</div>
 							</a>
 						{/if}
-
 						{foreach from=$additionalGateways key=key item=item}
 							<a href="{$item.url}" class="donate-card text-decoration-none">
 								<div class="card text-center shadow border-0 p-3 h-100">
@@ -25,6 +24,17 @@
 								</div>
 							</a>
 						{/foreach}
+
+						<!-- OFFLINE PAYMENTS CARD -->
+						<a href="{$url}donate/offline" class="donate-card text-decoration-none">
+							<div class="card text-center shadow border-0 p-3 h-100 bg-dark text-white" style="border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;">
+								<div class="d-flex w-100 justify-content-center align-items-center mb-2" style="height: 64px;">
+									<i class="fa-solid fa-money-bill-transfer fa-3x" style="color:#20c997;"></i>
+								</div>
+								<h6>Offline Payment</h6>
+								<small class="text-muted" style="font-size:11px;">Manual Transfer/Cash</small>
+							</div>
+						</a>
 
 					</div>
 

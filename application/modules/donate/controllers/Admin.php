@@ -48,15 +48,18 @@ class Admin extends MX_Controller
 
         if (!$string || !$type || !in_array($type, array('paypal'))) {
             die();
-        } else {
+        }
+        else {
             if ($type == "paypal") {
                 if (filter_var($string, FILTER_VALIDATE_EMAIL)) {
                     // Email
                     $results = $this->donate_model->findByEmail($type, $string);
-                } elseif (preg_match("/^[A-Z0-9]{17}$/", $string)) {
+                }
+                elseif (preg_match("/^[A-Z0-9]{17}$/", $string)) {
                     // TXN-ID
                     $results = $this->donate_model->findByTxn($type, $string);
-                } elseif (preg_match("/^[a-zA-Z0-9]*$/", $string) && strlen($string) > 3 && strlen($string) < 15) {
+                }
+                elseif (preg_match("/^[a-zA-Z0-9]*$/", $string) && strlen($string) > 3 && strlen($string) < 15) {
                     // Username
                     $user_id = $this->user->getId($string);
 
@@ -65,7 +68,8 @@ class Admin extends MX_Controller
                     }
 
                     $results = $this->donate_model->findById($type, $user_id);
-                } else {
+                }
+                else {
                     $results = $this->donate_model->getDonationLog($type);
                 }
 
@@ -77,7 +81,8 @@ class Admin extends MX_Controller
             foreach ($results as $k => $v) {
                 if ($type == "paypal") {
                     $results[$k]["nickname"] = $this->user->getUsername($v['user_id']);
-                } else {
+                }
+                else {
                     $results[$k]["nickname"] = $this->user->getUsername($v['custom']);
                 }
             }
@@ -122,43 +127,37 @@ class Admin extends MX_Controller
     public function settings()
     {
         $values = $this->donate_model->getAllValues();
-		
-		$data = array(
-			'values' => $values
-		);
 
-		$output = $this->template->loadPage("admin_settings.tpl", $data);
+        $data = array(
+            'values' => $values
+        );
 
-		$content = $this->administrator->box('<a href="' . $this->template->page_url . 'donate/admin">Donate admin</a> <i class="fa-duotone fa-arrow-right"></i> Donation Settings', $output);
+        $output = $this->template->loadPage("admin_settings.tpl", $data);
 
-		$this->administrator->view($content, "modules/donate/css/donate.css", "modules/donate/js/admin.js");
-	}
+        $content = $this->administrator->box('<a href="' . $this->template->page_url . 'donate/admin">Donate admin</a> <i class="fa-duotone fa-arrow-right"></i> Donation Settings', $output);
+
+        $this->administrator->view($content, "modules/donate/css/donate.css", "modules/donate/js/admin.js");
+    }
 
     public function save($id = false)
     {
         $price = $this->input->post('price');
         $points = $this->input->post('points');
 
-        if ($id)
-        {
-            if ($this->donate_model->updateValue($id, $price, $points))
-            {
+        if ($id) {
+            if ($this->donate_model->updateValue($id, $price, $points)) {
                 die('1');
             }
-            else
-            {
+            else {
                 die('Something went wrong');
             }
         }
-        else
-        {
-            if ($this->donate_model->addValue($price, $points))
-            {
-                $last = $this->db->table('paypal_donate')->select('id')->orderBy('id',"desc")->limit(1)->getResultArray()[0]['id'];
+        else {
+            if ($this->donate_model->addValue($price, $points)) {
+                $last = $this->db->table('paypal_donate')->select('id')->orderBy('id', "desc")->limit(1)->getResultArray()[0]['id'];
                 die($last);
             }
-            else
-            {
+            else {
                 die('Something went wrong');
             }
         }
@@ -184,8 +183,7 @@ class Admin extends MX_Controller
 
         $logs = $this->donate_model->getLogs($offset, $count);
 
-        if ($logs)
-        {
+        if ($logs) {
             $data = array(
                 'paypal_logs' => $logs,
                 'show_more' => $extraLogCount
@@ -194,8 +192,57 @@ class Admin extends MX_Controller
             $output = $this->template->loadPage("logging_found.tpl", $data);
 
             die($output);
-        } else {
+        }
+        else {
             die("<span>No results</span>");
         }
+    }
+
+    public function offline()
+    {
+        $this->administrator->setTitle("Offline Payments");
+        $payments = $this->donate_model->getOfflinePayments();
+
+        foreach ($payments as &$p) {
+            $p['nickname'] = $this->user->getUsername($p['user_id']);
+        }
+
+        $data = array(
+            'payments' => $payments,
+            'url' => $this->template->page_url
+        );
+
+        $output = $this->template->loadPage("admin_offline.tpl", $data);
+        $content = $this->administrator->box('<a href="' . $this->template->page_url . 'donate/admin">Donate admin</a> <i class="fa-duotone fa-arrow-right"></i> Offline Payments', $output);
+        $this->administrator->view($content, false, "modules/donate/js/admin.js");
+    }
+
+    public function offline_approve($id)
+    {
+        if (!$id || !is_numeric($id)) {
+            die();
+        }
+
+        $pay = $this->donate_model->getOfflinePayment($id);
+        if ($pay && $pay['status'] == 'pending') {
+            $this->donate_model->updateOfflineStatus($id, 'completed');
+            $this->donate_model->giveDp($pay['user_id'], $pay['points']);
+            $this->dblogger->createLog("admin", "add", "Approved Offline Payment", ['ID' => $id]);
+        }
+        redirect(base_url('donate/admin/offline'));
+    }
+
+    public function offline_reject($id)
+    {
+        if (!$id || !is_numeric($id)) {
+            die();
+        }
+
+        $pay = $this->donate_model->getOfflinePayment($id);
+        if ($pay && $pay['status'] == 'pending') {
+            $this->donate_model->updateOfflineStatus($id, 'rejected');
+            $this->dblogger->createLog("admin", "delete", "Rejected Offline Payment", ['ID' => $id]);
+        }
+        redirect(base_url('donate/admin/offline'));
     }
 }

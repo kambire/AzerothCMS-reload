@@ -2,14 +2,50 @@
 
 class Donate_model extends CI_Model
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->db->query("CREATE TABLE IF NOT EXISTS `donate_offline_payments` (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `user_id` int(11) NOT NULL,
+            `amount` decimal(10,2) NOT NULL,
+            `points` int(11) NOT NULL,
+            `method` varchar(255) NOT NULL,
+            `reference` varchar(255) NOT NULL,
+            `status` enum('pending','completed','rejected') DEFAULT 'pending',
+            `create_time` int(11) NOT NULL,
+            PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+    }
+
+    public function getOfflinePayments()
+    {
+        return $this->db->table('donate_offline_payments')->orderBy('id', 'DESC')->get()->getResultArray();
+    }
+
+    public function getOfflinePayment($id)
+    {
+        return $this->db->table('donate_offline_payments')->where('id', $id)->get()->getRowArray();
+    }
+
+    public function updateOfflineStatus($id, $status)
+    {
+        $this->db->table('donate_offline_payments')->where('id', $id)->update(['status' => $status]);
+    }
+
+    public function addOfflinePayment($data)
+    {
+        $this->db->table('donate_offline_payments')->insert($data);
+    }
+
     public function getDonationLog($type = 'paypal')
     {
         $query = $this->db->query("SELECT * FROM `paypal_logs` GROUP BY `payment_id` ORDER BY `status` DESC, `id` DESC LIMIT 10");
 
-        if ($query && $query->getNumRows() > 0)
-        {
+        if ($query && $query->getNumRows() > 0) {
             return $query->getResultArray();
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -23,10 +59,10 @@ class Donate_model extends CI_Model
     {
         $query = $this->db->query("SELECT * FROM " . $type . "_logs WHERE `payer_email` LIKE ?", ["%" . $string . "%"]);
 
-        if ($query->getNumRows())
-        {
+        if ($query->getNumRows()) {
             return $query->getResultArray();
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -35,14 +71,15 @@ class Donate_model extends CI_Model
     {
         if ($type == "paypal") {
             $query = $this->db->query("SELECT * FROM " . $type . "_logs WHERE `payment_id` LIKE ?", ["%" . $string . "%"]);
-        } else {
+        }
+        else {
             $query = $this->db->query("SELECT * FROM " . $type . "_logs WHERE `txn_id` LIKE ?", ["%" . $string . "%"]);
         }
 
-        if ($query->getNumRows())
-        {
+        if ($query->getNumRows()) {
             return $query->getResultArray();
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -51,10 +88,10 @@ class Donate_model extends CI_Model
     {
         $query = $this->db->query("SELECT * FROM " . $type . "_logs WHERE `" . (($type == "paygol") ? "custom" : "user_id") . "`=?", [$string]);
 
-        if ($query->getNumRows())
-        {
+        if ($query->getNumRows()) {
             return $query->getResultArray();
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -63,12 +100,12 @@ class Donate_model extends CI_Model
     {
         $query = $this->db->query("SELECT * FROM paypal_logs WHERE id = ?", [$id]);
 
-        if ($query->getNumRows())
-        {
+        if ($query->getNumRows()) {
             $row = $query->getResultArray();
 
             return $row[0];
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -89,25 +126,24 @@ class Donate_model extends CI_Model
 
         $row = $query->getResultArray();
 
-        if ($row[0]['total'])
-        {
+        if ($row[0]['total']) {
             $this->db->query("UPDATE monthly_income SET amount = amount + " . floor($payment_amount) . " WHERE month=?", array(date("Y-m")));
-        } else {
+        }
+        else {
             $this->db->query("INSERT INTO monthly_income(month, amount) VALUES(?, ?)", array(date("Y-m"), floor($payment_amount)));
         }
     }
 
     public function getAllValues()
     {
-		$query = $this->db->table('paypal_donate')->get();
-		
-		if($query->getNumRows() > 0)
-        {
-			return $query->getResultArray();
-		}
-		
-		return false;
-	}
+        $query = $this->db->table('paypal_donate')->get();
+
+        if ($query->getNumRows() > 0) {
+            return $query->getResultArray();
+        }
+
+        return false;
+    }
 
     public function addValue($price, $points)
     {
@@ -117,13 +153,12 @@ class Donate_model extends CI_Model
         ];
 
         $query = $this->db->table('paypal_donate')->insert($data);
-        
-        if($query)
-        {
-			return true;
-		}
-		
-		return false;
+
+        if ($query) {
+            return true;
+        }
+
+        return false;
     }
 
     public function updateValue($id, $price, $points)
@@ -134,13 +169,12 @@ class Donate_model extends CI_Model
         ];
 
         $query = $this->db->table('paypal_donate')->where('id', $id)->update($data);
-        
-        if($query)
-        {
-			return true;
-		}
-		
-		return false;
+
+        if ($query) {
+            return true;
+        }
+
+        return false;
     }
 
     public function deleteValue($id)
@@ -152,21 +186,19 @@ class Donate_model extends CI_Model
     {
         $builder = $this->db->table('paypal_logs')->select('*');
         $builder->orderBy('create_time', 'DESC');
-        if ($limit > 0 && $offset == 0)
-        {
+        if ($limit > 0 && $offset == 0) {
             $builder->limit($limit);
         }
 
-        if ($limit > 0 && $offset > 0)
-        {
+        if ($limit > 0 && $offset > 0) {
             $builder->limit($limit, $offset);
         }
         $query = $builder->get();
 
-        if ($query->getNumRows() > 0)
-        {
+        if ($query->getNumRows() > 0) {
             return $query->getResultArray();
-        } else {
+        }
+        else {
             return null;
         }
     }
@@ -175,11 +207,11 @@ class Donate_model extends CI_Model
     {
         $query = $this->db->table('paypal_logs')->select("COUNT(id) 'count'")->get();
 
-        if ($query->getNumRows() > 0)
-        {
+        if ($query->getNumRows() > 0) {
             $result = $query->getResultArray();
             return $result[0]['count'];
-        } else {
+        }
+        else {
             return null;
         }
     }
