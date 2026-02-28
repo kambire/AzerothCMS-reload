@@ -10,6 +10,7 @@ class Admin extends MX_Controller
 
         $this->load->library('administrator');
         $this->load->model('massmail_model');
+        $this->load->model('external_account_model');
         $this->load->helper('email_helper');
 
         requirePermission("view");
@@ -94,24 +95,28 @@ class Admin extends MX_Controller
         $this->massmail_model->addToQueue($campaign_id, $users);
 
         header('Location: ' . $this->template->page_url . 'massmail/admin');
+        exit;
     }
 
     public function start($id)
     {
         $this->massmail_model->updateCampaign($id, ['status' => 'sending']);
         header('Location: ' . $this->template->page_url . 'massmail/admin');
+        exit;
     }
 
     public function pause($id)
     {
         $this->massmail_model->updateCampaign($id, ['status' => 'paused']);
         header('Location: ' . $this->template->page_url . 'massmail/admin');
+        exit;
     }
 
     public function delete($id)
     {
         $this->massmail_model->deleteCampaign($id);
         header('Location: ' . $this->template->page_url . 'massmail/admin');
+        exit;
     }
 
     /**
