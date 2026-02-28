@@ -7,43 +7,66 @@
 		"name": "FusionCMS",
 		"website": "http:\/\/fusion-hub.com"
 	},
-
 	"permissions": {
-		"view": {"default" : true, "description": "View the store screen." },
-		"canViewOrders": {"default": false, "description": "View store orders" },
-		"canRefundOrders": {"default": false, "description": "Refund failed orders" },
-		"canViewItems": {"default": false, "description": "View store items" },
-		"canAddItems": {"default": false, "description": "Add store items" },
-		"canRemoveItems": {"default": false, "description": "Remove store items" },
-		"canEditItems": {"default": false, "description": "Edit store items" },
-		"canAddGroups": {"default": false, "description": "Add item groups" },
-		"canRemoveGroups": {"default": false, "description": "Remove item groups" },
-		"canEditGroups": {"default": false, "description": "Edit item groups" }
+		"view": {
+			"default": true,
+			"description": "View the store screen."
+		},
+		"canViewOrders": {
+			"default": false,
+			"description": "View store orders"
+		},
+		"canRefundOrders": {
+			"default": false,
+			"description": "Refund failed orders"
+		},
+		"canViewItems": {
+			"default": false,
+			"description": "View store items"
+		},
+		"canAddItems": {
+			"default": false,
+			"description": "Add store items"
+		},
+		"canRemoveItems": {
+			"default": false,
+			"description": "Remove store items"
+		},
+		"canEditItems": {
+			"default": false,
+			"description": "Edit store items"
+		},
+		"canAddGroups": {
+			"default": false,
+			"description": "Add item groups"
+		},
+		"canRemoveGroups": {
+			"default": false,
+			"description": "Remove item groups"
+		},
+		"canEditGroups": {
+			"default": false,
+			"description": "Edit item groups"
+		}
 	},
-
 	"roles": {
 		"view": {
 			"description": "View the store module.",
-
 			"permissions": {
 				"view": true
 			}
 		},
-
 		"moderate": {
 			"description": "Manage the store orders. <font style='color:red;'>Admin-tool</font>",
 			"dangerLevel": 1,
-
 			"permissions": {
 				"canViewOrders": true,
 				"canRefundOrders": true
 			}
 		},
-
 		"manage": {
 			"description": "Manage the store items. <font style='color:red;'>Admin-tool</font>",
 			"dangerLevel": 2,
-
 			"permissions": {
 				"canViewItems": true,
 				"canAddItems": true,
@@ -55,7 +78,6 @@
 			}
 		}
 	},
-
 	"admin": [
 		{
 			"text": "Store",
@@ -67,16 +89,20 @@
 					"controller": "admin_items",
 					"requirePermission": "canViewItems"
 				},
-				
 				{
 					"text": "Orders",
 					"icon": "users",
 					"controller": "admin_orders",
 					"requirePermission": "canViewOrders"
+				},
+				{
+					"text": "Payment gateways",
+					"icon": "money-check-dollar",
+					"controller": "admin_payments",
+					"requirePermission": "canViewOrders"
 				}
 			]
 		}
 	],
-
 	"enabled": true
 }
