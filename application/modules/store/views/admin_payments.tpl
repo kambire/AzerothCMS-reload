@@ -194,6 +194,55 @@
                     </div>
                     {/if}
 
+                    {* ============================================ *}
+                    {* BANCARD vPOS                                 *}
+                    {* ============================================ *}
+                    {if $gw.name == 'bancard'}
+                    <div class="alert alert-info mb-3 py-2" style="font-size:13px;">
+                        <i class="fa-solid fa-credit-card me-1"></i>
+                        Get your credentials from the <a href="https://comercios.bancard.com.py" target="_blank" class="alert-link">Bancard Merchant Portal</a>.
+                        After saving, configure your IPN URL in the portal as:<br>
+                        <code style="font-size:11px;">{$url}donate/bancard/confirm</code>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-white-50 text-uppercase" style="font-size:11px;letter-spacing:1px;">Environment</label>
+                        <div class="d-flex gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mode" id="bc_sandbox_{$gw.id}" value="sandbox"
+                                       {if !isset($cfg.mode) || $cfg.mode=='sandbox'}checked{/if}>
+                                <label class="form-check-label text-warning" for="bc_sandbox_{$gw.id}">🔶 Sandbox (Testing)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="mode" id="bc_live_{$gw.id}" value="live"
+                                       {if isset($cfg.mode) && $cfg.mode=='live'}checked{/if}>
+                                <label class="form-check-label text-success" for="bc_live_{$gw.id}">🟢 Live (Production)</label>
+                            </div>
+                        </div>
+                        <div class="form-text text-muted">Use Sandbox for testing — Bancard provides test card numbers.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-white-50 text-uppercase" style="font-size:11px;letter-spacing:1px;">Public Key</label>
+                        <input type="text" name="public_key" class="form-control bg-dark text-white border-secondary font-monospace"
+                               value="{if isset($cfg.public_key)}{$cfg.public_key}{/if}" placeholder="Your Bancard public key">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-white-50 text-uppercase" style="font-size:11px;letter-spacing:1px;">Private Key</label>
+                        <input type="password" name="private_key" class="form-control bg-dark text-white border-secondary font-monospace"
+                               value="{if isset($cfg.private_key)}{$cfg.private_key}{/if}" placeholder="••••••••••••••••">
+                        <div class="form-text text-muted">Used to generate secure MD5 tokens per transaction.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-white-50 text-uppercase" style="font-size:11px;letter-spacing:1px;">USD → PYG Exchange Rate</label>
+                        <div class="input-group" style="max-width:200px;">
+                            <span class="input-group-text bg-dark text-muted border-secondary">1 USD =</span>
+                            <input type="number" name="exchange_rate" class="form-control bg-dark text-white border-secondary"
+                                   value="{if isset($cfg.exchange_rate)}{$cfg.exchange_rate}{else}7500{/if}" min="1">
+                            <span class="input-group-text bg-dark text-muted border-secondary">PYG</span>
+                        </div>
+                        <div class="form-text text-muted">Bancard only accepts Guaraníes. Set the current exchange rate.</div>
+                    </div>
+                    {/if}
+
                     <button type="submit" class="btn btn-primary w-100 mt-2"><i class="fa-solid fa-floppy-disk me-2"></i>Save Settings</button>
                 </form>
             </div>

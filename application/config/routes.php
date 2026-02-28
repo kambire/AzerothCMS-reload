@@ -138,5 +138,12 @@ $route['donate/pagopar/callback'] = "donate/pagopar/callback";
 $route['donate/pagopar/success'] = "donate/pagopar/success";
 $route['donate/pagopar/cancel'] = "donate/pagopar/cancel";
 
+// Bancard vPOS payment gateway
+$route['donate/bancard/pay/(:num)'] = "donate/bancard/pay/$1";
+$route['donate/bancard/checkout/(:any)'] = "donate/bancard/checkout/$1";
+$route['donate/bancard/confirm'] = "donate/bancard/confirm";
+$route['donate/bancard/return'] = "donate/bancard/return_page";
+$route['donate/bancard/cancel'] = "donate/bancard/cancel";
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

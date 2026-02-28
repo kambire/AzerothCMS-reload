@@ -17,17 +17,14 @@ class Store_model extends CI_Model
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 
-            // Insert default gateways if table is empty
-            $result = $this->db->query("SELECT COUNT(*) as total FROM store_payment_methods");
-            $row = $result ? $result->getRowArray() : ['total' => 1];
-            if (isset($row['total']) && $row['total'] == 0) {
-                $this->db->query("INSERT INTO store_payment_methods (name, display_name, is_active, config) VALUES 
-                    ('offline', 'Offline Payment / Bank', 1, '{}'),
-                    ('paypal', 'PayPal', 0, '{\"client_id\":\"\",\"secret\":\"\"}'),
-                    ('pagopar', 'Pagopar (Paraguay)', 0, '{\"public_key\":\"\",\"private_key\":\"\"}'),
-                    ('skrill', 'Skrill', 0, '{\"merchant_email\":\"\",\"secret_word\":\"\"}')
-                ");
-            }
+            // Seed default gateways (INSERT IGNORE = safe to run on every boot)
+            $this->db->query("INSERT IGNORE INTO store_payment_methods (name, display_name, is_active, config) VALUES
+                ('offline', 'Offline Payment / Bank', 1, '{}'),
+                ('paypal', 'PayPal', 0, '{\"client_id\":\"\",\"secret\":\"\"}'),
+                ('pagopar', 'Pagopar (Paraguay)', 0, '{\"public_key\":\"\",\"private_key\":\"\"}'),
+                ('bancard', 'Bancard vPOS (Paraguay)', 0, '{\"public_key\":\"\",\"private_key\":\"\",\"mode\":\"sandbox\",\"currency\":\"PYG\",\"exchange_rate\":\"7500\"}'),
+                ('skrill', 'Skrill', 0, '{\"merchant_email\":\"\",\"secret_word\":\"\"}')
+            ");
 
             // Add payment columns to order_log if not yet present
             $columnsResult = $this->db->query("SHOW COLUMNS FROM order_log LIKE 'payment_method'");

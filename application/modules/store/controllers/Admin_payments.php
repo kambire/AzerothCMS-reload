@@ -92,9 +92,19 @@ class Admin_payments extends MX_Controller
                 ];
                 break;
 
+            case 'bancard':
+                $config = [
+                    'public_key' => $this->input->post('public_key', true),
+                    'private_key' => $this->input->post('private_key', true),
+                    'mode' => $this->input->post('mode', true) === 'live' ? 'live' : 'sandbox',
+                    'currency' => 'PYG',
+                    'exchange_rate' => (int)($this->input->post('exchange_rate', true) ?: 7500),
+                ];
+                break;
+
             default:
-                // Generic: save any extra JSON they typed
                 $config = [];
+
         }
 
         return json_encode($config, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
