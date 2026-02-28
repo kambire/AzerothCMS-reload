@@ -21,17 +21,33 @@
 	<div class="row">
 		
 		{$link_active = "teleport"}
-		{include file="../../ucp/views/ucp_navigation.tpl"}
 		
-		<div class="col-lg-8 py-lg-5 pb-5 pb-lg-0">
+		{* HORIZONTAL UCP NAVIGATION OVERRIDE *}
+		<div class="col-12 mt-4 mb-2">
+			<div class="d-flex flex-wrap gap-2 justify-content-center p-3 rounded" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);">
+				<a href="{$url}ucp" class="btn btn-sm text-white" style="background: rgba(255,255,255,0.1);">
+					<img src="{$CI->user->getAvatar()}" alt="avatar" class="rounded-circle me-2" width="20" height="20">
+					UCP Home
+				</a>
+				{foreach $ucp_menus as $group => $menusGroup}
+					{foreach $menusGroup as $menu}
+						<a href="{$menu.link}" class="btn btn-sm {if $url|cat:$link_active == $menu.link}btn-primary text-white{else}text-light opacity-75{/if}" {if $url|cat:$link_active != $menu.link}style="background: rgba(255,255,255,0.05);"{/if}>
+							{$menu.name}
+						</a>
+					{/foreach}
+				{/foreach}
+			</div>
+		</div>
+		
+		<div class="col-lg-12 pb-5">
 			<div class="section-header">{lang("teleport_hub", "teleport")}</div>
 			<div class="section-body">
-				<div class="row">
+				<div class="row g-4">
 					<div class="col-sm-12 col-lg-6">
 						{if $total}
 							{foreach from=$characters item=realm}
-								<table class="table table-striped table-hover table-responsive character-select">
-									<thead>
+								<table class="table table-dark table-striped table-hover table-responsive character-select shadow-sm" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden;">
+									<thead style="background: rgba(0,0,0,0.5);">
 										<tr>
 											<th scope="col" colspan="3" class="h4">{$realm.realmName}</th>
 										</tr>
@@ -68,7 +84,10 @@
 						{/if}
 					</div>
 					<div class="col-sm-12 col-lg-6 location-col">
-						<table class="table table-striped table-hover table-responsive location-select">
+						<table class="table table-dark table-striped table-hover table-responsive location-select shadow-sm" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden;">
+							<thead style="background: rgba(0,0,0,0.5);">
+								<tr><th colspan="2" class="h5">{lang("teleport_hub", "teleport")} Locations</th></tr>
+							</thead>
 							<tbody>
 								{if $locations}
 									{foreach from=$locations item=location}

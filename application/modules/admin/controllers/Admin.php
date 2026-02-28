@@ -28,7 +28,7 @@ class Admin extends MX_Controller
         $this->administrator->setTitle("Dashboard");
 
         $server_software = 'Unknown';
-        if (array_key_exists( 'SERVER_SOFTWARE',  $_SERVER)) {
+        if (array_key_exists('SERVER_SOFTWARE', $_SERVER)) {
             $server_software = $_SERVER['SERVER_SOFTWARE'];
 
             if (stripos($server_software, 'Apache') !== false && stripos($server_software, 'Win') !== false) {
@@ -40,7 +40,7 @@ class Admin extends MX_Controller
         }
 
         $graphMonthly = $this->getGraphData(false, [0, 1]);
-        $graphDaily   = $this->getGraphData(true, [0, 1, 2]);
+        $graphDaily = $this->getGraphData(true, [0, 1, 2]);
 
         $data = [
             'url' => $this->template->page_url,
@@ -48,7 +48,7 @@ class Admin extends MX_Controller
             'version' => $this->administrator->getVersion(),
             'php_version' => phpversion(),
             'ci_version' => CI_VERSION,
-            'smarty_version'  => $this->smarty::SMARTY_VERSION,
+            'smarty_version' => $this->smarty::SMARTY_VERSION,
             'os' => $this->getOsName(),
             'php_sapi' => PHP_SAPI,
             'server_software' => $server_software,
@@ -69,9 +69,10 @@ class Admin extends MX_Controller
             'realm_status' => $this->config->item('disable_realm_status'),
             'latestVersion' => $this->getLatestVersion(),
             'isOldTheme' => empty($this->template->theme_data['min_required_version']),
+            'install_warning' => is_dir(APPPATH . 'modules/install'),
         ];
 
-        $data['benchmark'] = $benchmark->stop('admin_execution')->getElapsedTime('admin_execution')  * 1000 . ' ms';
+        $data['benchmark'] = $benchmark->stop('admin_execution')->getElapsedTime('admin_execution') * 1000 . ' ms';
         $data['memory_usage'] = round(memory_get_usage() / 1024 / 1024, 2) . 'MB';
 
         $output = $this->template->loadPage("dashboard.tpl", $data);
@@ -125,10 +126,10 @@ class Admin extends MX_Controller
 
         $cache = $this->cache->get("total_accounts");
 
-        if ($cache !== false)
-        {
+        if ($cache !== false) {
             $data['total'] = $cache;
-        } else {
+        }
+        else {
             $data['total'] = $this->external_account_model->getAccountCount();
             $this->cache->save("total_accounts", $data['total'], 60 * 60 * 24);
         }
@@ -150,7 +151,8 @@ class Admin extends MX_Controller
             $cached = $this->cache->get($cacheKey);
             if ($cached !== false) {
                 $results[$ago] = $cached;
-            } else {
+            }
+            else {
                 $agoDataList[] = $ago;
             }
         }
@@ -175,9 +177,9 @@ class Admin extends MX_Controller
 
         foreach ($rows as $row) {
             [$year, $month, $day] = explode('-', $row['date']);
-            $ago = (int) $row['ago'];
+            $ago = (int)$row['ago'];
             $key = $daily ? $day : $month;
-            $key = (int) $key < 10 ? '0' . (int) $key : (string)(int) $key;
+            $key = (int)$key < 10 ? '0' . (int)$key : (string)(int)$key;
 
             if (!isset($results[$ago][$key])) {
                 $results[$ago][$key] = 0;
@@ -190,7 +192,7 @@ class Admin extends MX_Controller
             foreach ($results as $ago => $months) {
                 $year = date('Y') - $ago;
                 $results[$ago] = [
-                    (string) $year => [
+                    (string)$year => [
                         'month' => $months
                     ]
                 ];
@@ -220,37 +222,35 @@ class Admin extends MX_Controller
         if ($type === 'monthly') {
             //                   Every two weeks  -  Every 9 months
             return $ago === 0 ? 60 * 60 * 24 * 15 : 60 * 60 * 24 * 30 * 9;
-        } else {
+        }
+        else {
             return 60 * 60 * 24; // 24h
         }
     }
 
     public function checkSoap()
     {
-        if (!extension_loaded('soap'))
-        {
+        if (!extension_loaded('soap')) {
             show_error('SOAP not installed', 501);
         }
 
         $realms = $this->realms->getRealms();
 
-        foreach ($realms as $realm)
-        {
-            if ($realm->isOnline(true))
-            {
+        foreach ($realms as $realm) {
+            if ($realm->isOnline(true)) {
                 $this->realms->getRealm($realm->getId())->getEmulator()->sendCommand('.server info', $realm);
             }
         }
     }
 
-	public function realmstatus()
+    public function realmstatus()
     {
         $realms = $this->realms->getRealms();
         $uptimes = $this->flush_uptime($realms);
 
         echo json_encode([
-            'realms' => array_map(function($realm) use ($uptimes) {
-                return [
+            'realms' => array_map(function ($realm) use ($uptimes) {
+            return [
                     'id' => $realm->getId(),
                     'name' => $realm->getName(),
                     'is_online' => $realm->isOnline(),
@@ -258,7 +258,7 @@ class Admin extends MX_Controller
                     'online_players' => $realm->getOnline(),
                     'uptime' => $realm->isOnline() ? ($uptimes[$realm->getId()] ?? 0) : 0,
                 ];
-            }, $realms)
+        }, $realms)
         ]);
     }
 
@@ -269,13 +269,13 @@ class Admin extends MX_Controller
 
     public function notifications($count = false)
     {
-        if ($count)
-        {
+        if ($count) {
             $notifications = $this->cms_model->getNotifications($this->user->getId(), true);
 
             echo $notifications;
-			die();
-        } else {
+            die();
+        }
+        else {
             $notifications = $this->cms_model->getNotifications($this->user->getId(), false);
 
             $data = array(
@@ -285,18 +285,18 @@ class Admin extends MX_Controller
             $out = $this->template->loadPage("notifications.tpl", $data);
 
             echo $out;
-			die();
+            die();
         }
     }
 
     public function markReadNotification($id, $all = false)
     {
-        if ($all)
-        {
+        if ($all) {
             $uid = $this->user->getId();
             $this->cms_model->setReadNotification($id, $uid, true);
             die('yes');
-        } else {
+        }
+        else {
             $uid = $this->user->getId();
             $this->cms_model->setReadNotification($id, $uid, false);
             die('yes');
@@ -324,7 +324,8 @@ class Admin extends MX_Controller
             $difference = $first_date->diff($second_date);
 
             return $this->format_interval($difference);
-        } else {
+        }
+        else {
             return "Offline";
         }
     }
@@ -369,11 +370,12 @@ class Admin extends MX_Controller
         return false;
     }
 
-	private function getOsName(): string
-	{
+    private function getOsName(): string
+    {
         if (strtoupper(substr(PHP_OS_FAMILY, 0, 3)) === 'WIN') {
             $os = substr(php_uname('v'), strpos(strtolower(php_uname('v')), 'windows'), -1);
-        } else {
+        }
+        else {
             $build = '';
 
             if (strpos(php_uname('v'), 'Ubuntu'))
@@ -385,5 +387,5 @@ class Admin extends MX_Controller
         }
 
         return $os;
-	}
+    }
 }

@@ -41,6 +41,25 @@
 										</div>
 									</div>
 								</div>
+								
+								{if isset($install_warning) && $install_warning}
+                                    <div class="grid grid-cols-12 gap-4">
+                                        <div class="col-span-12 md:col-span-12">
+                                            <div class="border-red-500 bg-red-100 dark:bg-red-900/30 dark:border-red-800 relative w-full border transition-all duration-300 rounded-xl p-6 mb-3 alert shadow-lg">
+                                                <div class="mb-4 flex items-center justify-between">
+                                                    <h3 class="font-heading text-lg font-bold leading-tight text-red-800 dark:text-red-200 uppercase">
+														<i class="fa-solid fa-triangle-exclamation"></i> CRITICAL SECURITY WARNING!
+													</h3>
+                                                </div>
+                                                <p class="font-alt text-base font-medium leading-normal text-red-700 dark:text-red-300">
+													The <code class="bg-red-200 dark:bg-red-800 px-1 rounded">application/modules/install</code> folder still exists on your server. <br><br>
+													Leaving this folder active allows anyone to potentially reinstall your CMS and wipe your database. <strong>Please DELET it immediately via FTP or File Manager to secure your server.</strong>
+												</p>
+                                            </div>
+                                        </div>
+								    </div>
+		                        {/if}
+
                                 {if $latestVersion}
                                     <div class="grid grid-cols-12 gap-4">
                                         <div class="col-span-12 md:col-span-12">

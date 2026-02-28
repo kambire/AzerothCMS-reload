@@ -2,9 +2,25 @@
 	<div class="row">
 		
 		{$link_active = "vote"}
-		{include file="../../ucp/views/ucp_navigation.tpl"}
 		
-		<div class="col-lg-8 py-lg-5 pb-5 pb-lg-0">
+		{* HORIZONTAL UCP NAVIGATION OVERRIDE *}
+		<div class="col-12 mt-4 mb-2">
+			<div class="d-flex flex-wrap gap-2 justify-content-center p-3 rounded" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);">
+				<a href="{$url}ucp" class="btn btn-sm text-white" style="background: rgba(255,255,255,0.1);">
+					<img src="{$CI->user->getAvatar()}" alt="avatar" class="rounded-circle me-2" width="20" height="20">
+					UCP Home
+				</a>
+				{foreach $ucp_menus as $group => $menusGroup}
+					{foreach $menusGroup as $menu}
+						<a href="{$menu.link}" class="btn btn-sm {if $url|cat:$link_active == $menu.link}btn-primary text-white{else}text-light opacity-75{/if}" {if $url|cat:$link_active != $menu.link}style="background: rgba(255,255,255,0.05);"{/if}>
+							{$menu.name}
+						</a>
+					{/foreach}
+				{/foreach}
+			</div>
+		</div>
+		
+		<div class="col-lg-12 pb-5">
 			<div class="section-header">Voting <span>Panel</span></div>
 			<div class="section-body">
 			<div class="alert alert-info firefox text-center" style="display:none;" role="alert">
@@ -15,15 +31,15 @@
 					{if $vote_sites}
 						{foreach from=$vote_sites item=vote_site}
 							<div class="col mb-3">
-								<div class="card h-100 cursor-pointer card-hover {if !$vote_site.canVote}card-disabled{/if}" {if $vote_site.canVote}onClick="Vote.open({$vote_site.id}, {$vote_site.hour_interval});"{/if}>
-									<div class="card-header text-center">
+								<div class="card h-100 cursor-pointer card-hover bg-dark text-white {if !$vote_site.canVote}card-disabled{/if}" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.2s;" {if $vote_site.canVote}onClick="Vote.open({$vote_site.id}, {$vote_site.hour_interval});"{/if}>
+									<div class="card-header text-center border-bottom border-secondary" style="background: rgba(0,0,0,0.4);">
 										{if $vote_site.vote_image}
-											<img src="{$vote_site.vote_image}" alt="{$vote_site.vote_sitename}" width="100%">
+											<img src="{$vote_site.vote_image}" alt="{$vote_site.vote_sitename}" width="100%" class="rounded">
 										{else}
-											{$vote_site.vote_sitename}
+											<h5 class="mb-0 text-uppercase fw-bold text-light">{$vote_site.vote_sitename}</h5>
 										{/if}
 									</div>
-									<div class="card-body text-center">
+									<div class="card-body text-center d-flex flex-column align-items-center justify-content-center">
 										<div class="card-text h-100 py-3 d-flex justify-content-center align-items-center" id="vote_field_{$vote_site.id}">
 											{if $vote_site.canVote}
 												{form_open("vote/site/", $formAttributes)}
