@@ -74,89 +74,110 @@
 					<div id="store_content">
 						<div id="store_realms">
 							{foreach from=$data item=realm key=realmId}
-							<div class="accordion mb-3" id="realm_parent_{$realmId}">
-								<div class="accordion-item">
-									<h2 class="accordion-header" id="realm_{$realmId}">
-									<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#realm_indicator_{$realmId}" aria-expanded="true" aria-controls="realm_indicator_{$realmId}">
-										{$realm.name}
-									</button>
-									</h2>
-									<div id="realm_indicator_{$realmId}" class="accordion-collapse collapse show" aria-labelledby="realm_{$realmId}" data-bs-parent="#realm_parent_{$realmId}">
-									<div class="accordion-body">
-										{if isset($realm.items.groups)}
-											{foreach from=$realm.items.groups item=group}
-												<div class="accordion mb-3" id="group_parent_{$group.id}_{$realmId}">
-													<div class="accordion-item">
-														<h2 class="accordion-header" id="group_{$group.id}">
-														<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#group_{$group.id}_realm_{$realmId}" aria-expanded="true" aria-controls="group_{$group.id}_realm_{$realmId}">
-															{$group.title}
-														</button>
-														</h2>
-														<div id="group_{$group.id}_realm_{$realmId}" class="accordion-collapse collapse {if !$minimize}show{/if}" aria-labelledby="group_{$group.id}" data-bs-parent="#group_parent_{$group.id}_{$realmId}">
-														<div class="accordion-body">
-															{foreach from=$group.items item=item}
-															<div class="store_item row p-2 border rounded mb-2" id="item_{$item.id}">
-																<div class="col-md-1 mt-1">
-																	<img class="item_icon img-responsive rounded" src="{$CI->config->item('api_item_icons')}/medium/{$item.icon}.jpg" align="absmiddle" {if $item.tooltip}data-realm="{$item.realm}" rel="item={$item.itemid}"{/if}>{if $item.itemcount > 1 && !preg_match("/,/", $item.itemcount)}<span class="wh-icon-text" data-type="number">{$item.itemcount}</span>{/if}
+							<div class="realm-store-section mb-5" id="realm_parent_{$realmId}">
+								<h2 class="text-primary mb-4" id="realm_{$realmId}" style="border-bottom: 2px solid var(--primary-color, #007bff); padding-bottom: 10px;">
+									<i class="fa fa-server"></i> {$realm.name}
+								</h2>
+
+								<div id="realm_indicator_{$realmId}">
+									{if isset($realm.items.groups)}
+										{foreach from=$realm.items.groups item=group}
+											<div class="store-group-section mb-5" id="group_parent_{$group.id}_{$realmId}">
+												<h4 class="mb-4 d-flex align-items-center" id="group_{$group.id}" style="font-weight: 600; color: #ccc;">
+													<span style="flex-grow: 1; border-top: 1px dashed rgba(255,255,255,0.2); margin-right: 15px;"></span>
+													{if $group.icon}<i class="{$group.icon} me-2 text-primary"></i>{/if}
+													{$group.title}
+												</h4>
+
+												<div class="row g-4" id="group_{$group.id}_realm_{$realmId}">
+													{foreach from=$group.items item=item}
+													<div class="col-md-6 col-lg-4">
+														<div class="store_item card h-100 bg-dark text-white" id="item_{$item.id}" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.2s;">
+															
+															<div class="card-body text-center p-4">
+																<div class="item-icon-wrapper mb-3" style="position: relative; display: inline-block;">
+																	<img class="item_icon rounded shadow-lg" src="{$CI->config->item('api_item_icons')}/large/{$item.icon}.jpg" alt="{$item.name}" style="width: 68px; height: 68px; border: 2px solid #444;" {if $item.tooltip}data-realm="{$item.realm}" rel="item={$item.itemid}"{/if}>
+																	{if $item.itemcount > 1 && !preg_match("/,/", $item.itemcount)}
+																		<span class="badge bg-primary position-absolute bottom-0 end-0 translate-middle-x rounded-pill" style="font-size: 0.8rem;">x{$item.itemcount}</span>
+																	{/if}
 																</div>
-																<div class="col-md-5 mt-1">
-																	<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality} align-self-center">
-																		{character_limiter($item.name, 20)}
+
+																<h5 class="card-title text-truncate mb-2" style="font-weight: bold; font-size: 1.1rem;">
+																	<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality} text-decoration-none">
+																		{character_limiter($item.name, 35)}
 																	</a>
-																<p class="text-justify text-truncate mb-0">
-																	{character_limiter($item.description, 25)}
+																</h5>
+																
+																<p class="card-text text-muted small" style="min-height: 40px; line-height: 1.4;">
+																	{character_limiter($item.description, 60)}
 																</p>
-																</div>
-																<div class="store_buttons align-items-center align-content-center col-md-6 border-left mt-1">
-																		{if $item.vp_price}
-																		<a href="javascript:void(0)" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes($item.name)}', {$item.vp_price}, 'vp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="nice_button vp_button">
-																			<img src="{$url}application/images/icons/lightning.png" align="absmiddle"> <span class="vp_price_value">{$item.vp_price}</span> {lang("vp", "store")}
-																		</a>
-																		{/if}
-							
-																		{if $item.dp_price}
-																		<a href="javascript:void(0)" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes($item.name)}', {$item.dp_price}, 'dp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="nice_button dp_button">
-																			<img src="{$url}application/images/icons/coins.png" align="absmiddle"> <span class="dp_price_value">{$item.dp_price}</span> {lang("dp", "store")}
-																		</a>
-																		{/if}
+															</div>
+															
+															<div class="card-footer bg-transparent border-top border-secondary p-3">
+																<div class="store_buttons d-flex flex-column gap-2">
+																	{if $item.vp_price}
+																	<button type="button" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes($item.name)}', {$item.vp_price}, 'vp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="btn btn-outline-warning w-100 d-flex justify-content-between align-items-center vp_button" style="border-radius: 8px;">
+																		<span><img src="{$url}application/images/icons/lightning.png" align="absmiddle" style="height:16px;"> {lang("vp", "store")}</span>
+																		<strong><span class="vp_price_value">{$item.vp_price}</span></strong>
+																	</button>
+																	{/if}
+						
+																	{if $item.dp_price}
+																	<button type="button" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes($item.name)}', {$item.dp_price}, 'dp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="btn btn-outline-info w-100 d-flex justify-content-between align-items-center dp_button" style="border-radius: 8px;">
+																		<span><img src="{$url}application/images/icons/coins.png" align="absmiddle" style="height:16px;"> {lang("dp", "store")}</span>
+																		<strong><span class="dp_price_value">{$item.dp_price}</span></strong>
+																	</button>
+																	{/if}
 																</div>
 															</div>
-															{/foreach}
+
 														</div>
+													</div>
+													{/foreach}
+												</div>
+											</div>
+										{/foreach}
+									{/if}
+
+									{if isset($realm.items.items)}
+										<div class="row g-4 mt-4">
+											{foreach from=$realm.items.items item=item}
+											<div class="col-md-6 col-lg-4">
+												<div class="store_item card h-100 bg-dark text-white" id="item_{$item.id}" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+													<div class="card-body text-center p-4">
+														<div class="item-icon-wrapper mb-3">
+															<img class="item_icon rounded shadow-lg" src="{$CI->config->item('api_item_icons')}/large/{$item.icon}.jpg" alt="{$item.name}" style="width: 68px; height: 68px; border: 2px solid #444;" {if $item.tooltip}data-realm="{$item.realm}" rel="item={$item.itemid}"{/if}>
+														</div>
+														<h5 class="card-title text-truncate mb-2">
+															<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality} text-decoration-none">
+																{character_limiter($item.name, 35)}
+															</a>
+														</h5>
+														<p class="card-text text-muted small" style="min-height: 40px; line-height: 1.4;">
+															{character_limiter($item.description, 60)}
+														</p>
+													</div>
+													<div class="card-footer bg-transparent border-top border-secondary p-3">
+														<div class="store_buttons d-flex flex-column gap-2">
+															{if $item.vp_price}
+															<button type="button" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes(preg_replace('/"/', "'", $item.name))}', {$item.vp_price}, 'vp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="btn btn-outline-warning w-100 d-flex justify-content-between align-items-center vp_button" style="border-radius: 8px;">
+																<span><img src="{$url}application/images/icons/lightning.png" align="absmiddle" style="height:16px;"> {lang("vp", "store")}</span>
+																<strong><span class="vp_price_value">{$item.vp_price}</span></strong>
+															</button>
+															{/if}
+															{if $item.dp_price}
+															<button type="button" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes(preg_replace('/"/', "'", $item.name))}', {$item.dp_price}, 'dp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="btn btn-outline-info w-100 d-flex justify-content-between align-items-center dp_button" style="border-radius: 8px;">
+																<span><img src="{$url}application/images/icons/coins.png" align="absmiddle" style="height:16px;"> {lang("dp", "store")}</span>
+																<strong><span class="dp_price_value">{$item.dp_price}</span></strong>
+															</button>
+															{/if}
 														</div>
 													</div>
 												</div>
-											{/foreach}
-										{/if}
-
-										{if isset($realm.items)}
-										{foreach from=$realm.items.items item=item}
-										<div class="store_item" id="item_{$item.id}">
-											<div class="store_buttons">
-												{if $item.vp_price}
-													<a href="javascript:void(0)" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes(preg_replace('/"/', "'", $item.name))}', {$item.vp_price}, 'vp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="nice_button vp_button">
-														<img src="{$url}application/images/icons/lightning.png" align="absmiddle"> <span class="vp_price_value">{$item.vp_price}</span> {lang("vp", "store")}
-													</a>
-													{/if}
-					
-													{if $item.dp_price}
-													<a href="javascript:void(0)" onClick="Store.Cart.add({$item.id}, '{$item.itemid}', '{addslashes(preg_replace('/"/', "'", $item.name))}', {$item.dp_price}, 'dp', '{addslashes($realm.name)}', {$realmId}, {$item.quality}, {$item.tooltip})" class="nice_button dp_button">
-														<img src="{$url}application/images/icons/coins.png" align="absmiddle"> <span class="dp_price_value">{$item.dp_price}</span> {lang("dp", "store")}
-													</a>
-													{/if}
 											</div>
-					
-											<img class="item_icon" src="{$CI->config->item('api_item_icons')}/medium/{$item.icon}.jpg" align="absmiddle" {if $item.tooltip}data-realm="{$item.realm}" rel="item={$item.itemid}"{/if}>
-											<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality}">
-												{character_limiter($item.name, 20)}
-											</a>
-											<br>{character_limiter($item.description, 25)}
-											<div class="clear"></div>
+											{/foreach}
 										</div>
-										{/foreach}
 									{/if}
-									</div>
-									</div>
 								</div>
 							</div>
 						{/foreach}	
