@@ -6,40 +6,45 @@ class Store_model extends CI_Model
     {
         parent::__construct();
 
-        // Create the store_payment_methods table
-        $this->db->query("CREATE TABLE IF NOT EXISTS `store_payment_methods` (
-            `id` int(11) NOT NULL AUTO_INCREMENT,
-            `name` varchar(255) NOT NULL,
-            `display_name` varchar(255) NOT NULL,
-            `is_active` tinyint(1) DEFAULT '0',
-            `config` text DEFAULT NULL,
-            PRIMARY KEY (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+        try {
+            // Create the store_payment_methods table if not exists
+            $this->db->query("CREATE TABLE IF NOT EXISTS `store_payment_methods` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `name` varchar(255) NOT NULL,
+                `display_name` varchar(255) NOT NULL,
+                `is_active` tinyint(1) DEFAULT '0',
+                `config` text DEFAULT NULL,
+                PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 
-        // Insert default gateways if not exists
-        $result = $this->db->query("SELECT count(*) as total FROM store_payment_methods")->getRowArray();
-        if ($result['total'] == 0) {
-            $this->db->query("INSERT INTO store_payment_methods (name, display_name, is_active, config) VALUES 
-                ('offline', 'Offline Payment / Bank', 1, '{}'),
-                ('paypal', 'PayPal', 0, '{\"client_id\":\"\",\"secret\":\"\"}'),
-                ('pagopar', 'Pagopar (Paraguay)', 0, '{\"public_key\":\"\",\"private_key\":\"\"}'),
-                ('skrill', 'Skrill', 0, '{\"merchant_email\":\"\",\"secret_word\":\"\"}')
-            ");
+            // Insert default gateways if table is empty
+            $result = $this->db->query("SELECT COUNT(*) as total FROM store_payment_methods");
+            $row = $result ? $result->getRowArray() : ['total' => 1];
+            if (isset($row['total']) && $row['total'] == 0) {
+                $this->db->query("INSERT INTO store_payment_methods (name, display_name, is_active, config) VALUES 
+                    ('offline', 'Offline Payment / Bank', 1, '{}'),
+                    ('paypal', 'PayPal', 0, '{\"client_id\":\"\",\"secret\":\"\"}'),
+                    ('pagopar', 'Pagopar (Paraguay)', 0, '{\"public_key\":\"\",\"private_key\":\"\"}'),
+                    ('skrill', 'Skrill', 0, '{\"merchant_email\":\"\",\"secret_word\":\"\"}')
+                ");
+            }
+
+            // Add payment columns to order_log if not yet present
+            $columnsResult = $this->db->query("SHOW COLUMNS FROM order_log LIKE 'payment_method'");
+            if ($columnsResult && $columnsResult->getNumRows() == 0) {
+                $this->db->query("ALTER TABLE order_log
+                    ADD COLUMN payment_method VARCHAR(50) DEFAULT 'points',
+                    ADD COLUMN payment_id VARCHAR(100) DEFAULT NULL,
+                    ADD COLUMN status VARCHAR(20) DEFAULT 'completed',
+                    ADD COLUMN amount DECIMAL(10,2) DEFAULT '0.00'");
+
+                $this->db->query("UPDATE order_log SET status = 'completed', payment_method = 'points' WHERE completed = 1");
+                $this->db->query("UPDATE order_log SET status = 'failed', payment_method = 'points' WHERE completed = 0");
+            }
         }
-
-        // Alter order_log to support gates and statuses
-        // We use query 'SHOW COLUMNS' because 'IF NOT EXISTS' is not standard for columns in early MySQL
-        $columnsResult = $this->db->query("SHOW COLUMNS FROM order_log LIKE 'payment_method'");
-        if ($columnsResult->getNumRows() == 0) {
-            $this->db->query("ALTER TABLE order_log 
-                ADD COLUMN payment_method VARCHAR(50) DEFAULT 'points', 
-                ADD COLUMN payment_id VARCHAR(100) DEFAULT NULL, 
-                ADD COLUMN status VARCHAR(20) DEFAULT 'completed', 
-                ADD COLUMN amount DECIMAL(10,2) DEFAULT '0.00'");
-
-            // Migrate existing orders to 'completed' and 'points'
-            $this->db->query("UPDATE order_log SET status = 'completed', payment_method = 'points' WHERE completed = 1");
-            $this->db->query("UPDATE order_log SET status = 'failed', payment_method = 'points' WHERE completed = 0");
+        catch (\Exception $e) {
+            // Migrations are best-effort; don't crash the store if they fail
+            log_message('error', 'Store_model migration error: ' . $e->getMessage());
         }
     }
 

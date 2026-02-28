@@ -1,5 +1,6 @@
 <?php
 
+use App\Config\Services;
 use MX\MX_Controller;
 
 class Admin_payments extends MX_Controller
@@ -20,27 +21,28 @@ class Admin_payments extends MX_Controller
 
         if ($this->input->post()) {
             $id = $this->input->post('id');
-            $is_active = $this->input->post('is_active') ? 1 : 0;
+            $active = $this->input->post('is_active') ? 1 : 0;
             $config = $this->input->post('config');
 
             if ($id && $config) {
-                // Config should be a json string, ensure at least it's a valid string format
-                $this->store_model->updatePaymentMethod($id, $is_active, trim($config));
-                $this->session->setFlashdata('success', 'Payment gateway settings saved successfully.');
+                $this->store_model->updatePaymentMethod((int)$id, $active, trim($config));
+                // Use CI4 Services session for flash messages (framework pattern)
+                Services::session()->setTempdata('pay_success', 'Payment gateway settings saved.', 5);
             }
+
             redirect($this->template->page_url . "store/admin_payments");
         }
 
         $gateways = $this->store_model->getPaymentMethods();
+        $success_msg = Services::session()->getTempdata('pay_success');
 
-        $data = array(
-            'gateways' => $gateways,
+        $data = [
+            'gateways' => $gateways ?: [],
             'url' => $this->template->page_url,
-            'success_msg' => $this->session->getFlashdata('success')
-        );
+            'success_msg' => $success_msg,
+        ];
 
         $output = $this->template->loadPage("admin_payments.tpl", $data);
-
         $content = $this->administrator->box('Payment Gateways Settings', $output);
         $this->administrator->view($content, false, false);
     }
