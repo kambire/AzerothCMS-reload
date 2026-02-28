@@ -11,7 +11,7 @@ class Admin_payments extends MX_Controller
 
         parent::__construct();
 
-        requirePermission("hasManagementAccess");
+        requirePermission("canViewOrders");
     }
 
     public function index()

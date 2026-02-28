@@ -1,6 +1,6 @@
 <?php
 
-if (! defined('BASEPATH')) {
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 /**
@@ -71,7 +71,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->add('/', 'News::index');
 
-if(!file_exists(WRITEPATH . 'install/.lock')){
+if (!file_exists(WRITEPATH . 'install/.lock')) {
     $route['default_controller'] = 'install';
     return;
 }
@@ -127,6 +127,10 @@ $route['admin/theme/edit'] = "admin/edittheme/index";
 
 // Vote
 $route['vote/callback/(:any)'] = "vote/callback/index/$1";
+
+// Store - explicit admin routes
+$route['store/admin_payments'] = "store/admin_payments/index";
+$route['store/admin_payments/(:any)'] = "store/admin_payments/$1";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
