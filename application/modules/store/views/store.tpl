@@ -46,44 +46,54 @@
 				
 			<div id="store_wrapper">
 				<div id="store">
-					<form onSubmit="return false">
-					<div class="row align-self-center mb-3">
-							<label class="col-sm-1 align-self-center sort" for="sort_by">{lang("sort_by", "store")}</label>
-							<div class="col-sm-2">
-							<select id="sort_by" name="sort_by" onChange="Store.Filter.sort(this.value)">
-								<option value="standard" selected>{lang("default", "store")}</option>
-								<option value="name">{lang("name", "store")}</option>
-								<option value="priceVp">{lang("price", "store")} ({lang("vp", "store")})</option>
-								<option value="priceDp">{lang("price", "store")} ({lang("dp", "store")})</option>
-								<option value="quality">{lang("item_quality", "store")}</option>
-							</select>
-							</div>
+					<form onSubmit="return false" class="mb-5">
 						
-						<div class="col-sm-3">
-							<select id="item_quality" name="item_quality" onChange="Store.Filter.setQuality(this.value)">
-								<option value="ALL" selected>{lang("all_items", "store")}</option>
-								<option value="0" class="q0">{lang("poor", "store")}</option>
-								<option value="1" class="q1">{lang("common", "store")}</option>
-								<option value="2" class="q2">{lang("uncommon", "store")}</option>
-								<option value="3" class="q3">{lang("rare", "store")}</option>
-								<option value="4" class="q4">{lang("epic", "store")}</option>
-								<option value="5" class="q5">{lang("legendary", "store")}</option>
-								<option value="6" class="q6">{lang("artifact", "store")}</option>
-								<option value="7" class="q7">{lang("heirloom", "store")}</option>
-							</select>
-						</div>
-						<div class="col-sm-3">
-							<input class="form-control" type="text" id="filter_name" placeholder="{lang("filter", "store")}" onKeyUp="Store.Filter.setName(this.value)">
-						</div>
-						<div class="col-sm-3">
-							<a href="javascript:void(0)" onClick="Store.Filter.toggleVote(this)" class="nice_button nice_active">
-								<img src="{$url}application/images/icons/lightning.png" align="absmiddle"> {lang("vp", "store")}
-							</a>
-
-							<a href="javascript:void(0)" onClick="Store.Filter.toggleDonate(this)" class="nice_button nice_active">
-								<img src="{$url}application/images/icons/coins.png" align="absmiddle"> {lang("dp", "store")}
-							</a>
-						</div>
+						{* BOTONERA HORIZONTAL DE FILTROS CREADA NUEVA *}
+						<div class="store-filters-panel p-3 mb-4 rounded" style="background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);">
+							<div class="row g-3 align-items-center mb-3 border-bottom pb-3" style="border-color: rgba(255,255,255,0.05) !important;">
+								<div class="col-md-9 d-flex flex-wrap gap-2">
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('ALL'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: rgba(255,255,255,0.2); opacity: 1;">
+										<i class="fa fa-asterisk"></i> {lang("all_items", "store")}
+									</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('0'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #9d9d9d; opacity: 0.5;">{lang("poor", "store")}</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('1'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #ffffff; color: #000 !important; opacity: 0.5;">{lang("common", "store")}</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('2'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #1eff00; text-shadow: 1px 1px 2px #000; opacity: 0.5;">{lang("uncommon", "store")}</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('3'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #0070dd; opacity: 0.5;">{lang("rare", "store")}</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('4'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #a335ee; opacity: 0.5;">{lang("epic", "store")}</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('5'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #ff8000; opacity: 0.5;">{lang("legendary", "store")}</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('6'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #e6cc80; opacity: 0.5;">{lang("artifact", "store")}</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.setQuality('7'); $(this).siblings().css('opacity', '0.5'); $(this).css('opacity', '1');" class="btn btn-sm text-white" style="background: #00ccff; opacity: 0.5;">{lang("heirloom", "store")}</a>
+								</div>
+								<div class="col-md-3 text-end">
+									<a href="javascript:void(0)" onClick="Store.Filter.toggleVote(this)" class="nice_button nice_active me-2" style="padding: 5px 10px; border-radius: 5px; background: rgba(0,0,0,0.3);">
+										<img src="{$url}application/images/icons/lightning.png" align="absmiddle" style="height:14px;"> {lang("vp", "store")}
+									</a>
+									<a href="javascript:void(0)" onClick="Store.Filter.toggleDonate(this)" class="nice_button nice_active" style="padding: 5px 10px; border-radius: 5px; background: rgba(0,0,0,0.3);">
+										<img src="{$url}application/images/icons/coins.png" align="absmiddle" style="height:14px;"> {lang("dp", "store")}
+									</a>
+								</div>
+							</div>
+							
+							<div class="row g-3 align-items-center">
+								<div class="col-md-2 text-muted small text-uppercase">
+									<i class="fa fa-sort"></i> {lang("sort_by", "store")}
+								</div>
+								<div class="col-md-4">
+									<select id="sort_by" name="sort_by" class="form-select form-select-sm" onChange="Store.Filter.sort(this.value)" style="background-color: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.1);">
+										<option value="standard" selected>{lang("default", "store")}</option>
+										<option value="name">{lang("name", "store")}</option>
+										<option value="priceVp">{lang("price", "store")} ({lang("vp", "store")})</option>
+										<option value="priceDp">{lang("price", "store")} ({lang("dp", "store")})</option>
+										<option value="quality">{lang("item_quality", "store")}</option>
+									</select>
+								</div>
+								<div class="col-md-6">
+									<div class="input-group input-group-sm">
+										<span class="input-group-text" style="background-color: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.1);"><i class="fa fa-search"></i></span>
+										<input class="form-control form-control-sm" type="text" id="filter_name" placeholder="{lang("filter", "store")}..." onKeyUp="Store.Filter.setName(this.value)" style="background-color: rgba(0,0,0,0.5); color: #fff; border: 1px solid rgba(255,255,255,0.1);">
+									</div>
+								</div>
+							</div>
 						</div>
 					</form>
 
