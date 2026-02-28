@@ -5,7 +5,7 @@
  * Enable captcha for site
  *
  */
-$config['use_captcha'] = true;
+$config['use_captcha'] = false;
 
 /**
  *
