@@ -27,5 +27,14 @@
             ]
         }
     ],
+    "roles": {
+        "administrate": {
+            "description": "Manage mass mail campaigns.",
+            "dangerLevel": 2,
+            "permissions": {
+                "view": true
+            }
+        }
+    },
     "enabled": true
 }
