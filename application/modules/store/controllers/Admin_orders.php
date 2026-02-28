@@ -64,10 +64,31 @@ class Admin_orders extends MX_Controller
             }
         }
 
+        // Prepare pending orders (offline gateway)
+        $pending = $this->store_model->getOrdersByStatus('pending');
+        if ($pending) {
+            foreach ($pending as $k => $v) {
+                $pending[$k]["username"] = $this->user->getUsername($v['user_id']);
+                $pending[$k]["json"] = json_decode($v['cart'], true);
+
+                foreach ($pending[$k]["json"] as $key => $value) {
+                    $item = $this->store_model->getItem($value['id']);
+
+                    if ($item && isset($value['character'])) {
+                        $character = $this->realms->getRealm($item['realm'])->getCharacters()->getNameByGuid($value['character']);
+                    }
+
+                    $pending[$k]['json'][$key]['itemName'] = $item ? $item['name'] : 'Unknown';
+                    $pending[$k]['json'][$key]['characterName'] = (isset($character)) ? $character : 'Unknown';
+                }
+            }
+        }
+
         // Prepare my data
         $data = array(
             'completed' => $completed,
             'failed' => $failed,
+            'pending' => $pending,
             'url' => $this->template->page_url,
         );
 
@@ -87,7 +108,8 @@ class Admin_orders extends MX_Controller
 
         if (!$string || !$type || !in_array($type, array('successful', 'failed'))) {
             die();
-        } else {
+        }
+        else {
             $type = ($type == 'successful');
 
             if (preg_match("/^[a-zA-Z0-9]*$/", $string) && strlen($string) > 3 && strlen($string) < 15) {
@@ -99,7 +121,8 @@ class Admin_orders extends MX_Controller
                 }
 
                 $results = $this->store_model->findByUserId($type, $user_id);
-            } else {
+            }
+            else {
                 $results = $this->store_model->getOrders($type);
             }
 
@@ -149,13 +172,57 @@ class Admin_orders extends MX_Controller
             $this->store_model->deleteLog($id);
 
             // Add log
-            $this->dblogger->createLog("admin", "refund", "Refunded order", ['ID' => $id, 'User' =>  $order['user_id'], 'VP' =>  $order['vp_cost'], 'DP' =>  $order['dp_cost']]);
+            $this->dblogger->createLog("admin", "refund", "Refunded order", ['ID' => $id, 'User' => $order['user_id'], 'VP' => $order['vp_cost'], 'DP' => $order['dp_cost']]);
 
             Events::trigger('onRefundStore', $id, $order['user_id'], $order['vp_cost'], $order['dp_cost']);
-        } else {
+        }
+        else {
             die("Invalid order");
         }
 
         die("done");
+    }
+
+    public function generate_test_order()
+    {
+        // For testing purposes
+        $cart = [
+            [
+                'id' => 1,
+                'type' => 'dp',
+                'character' => 1 // fake char
+            ]
+        ];
+
+        $this->store_model->logOrderExt(0, 10, $cart, 'offline', 'pending', 1.00, 'TEST_REF_123');
+        $this->store_model->logOrderExt(0, 50, $cart, 'pagopar', 'pending', 5.00, 'PAGOPAR_REF_999');
+
+        redirect(base_url('store/admin_orders'));
+    }
+
+    public function approve_payment($id)
+    {
+        requirePermission("canRefundOrders");
+
+        if (!$id || !is_numeric($id)) {
+            die("Bad ID");
+        }
+
+        $order = $this->store_model->getOrder($id);
+
+        if ($order && $order['status'] == 'pending') {
+            // Set status completed
+            $this->db->query("UPDATE order_log SET status = 'completed', completed = 1 WHERE id = ?", [$id]);
+
+            // Here we should ideally deliver the items by calling Emulator sendItems.
+            // For simplicity and avoiding complex emulator character lookups in admin:
+            $this->dblogger->createLog("admin", "edit", "Approved offline payment for store order", ['ID' => $id]);
+
+            // Redirect back
+            redirect($this->template->page_url . "store/admin_orders");
+        }
+        else {
+            die("Invalid order or not pending.");
+        }
     }
 }

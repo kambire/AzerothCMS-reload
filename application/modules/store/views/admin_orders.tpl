@@ -1,4 +1,53 @@
-<div class="card">
+<div class="row mb-3">
+    <div class="col-12 text-end">
+        <a href="{$url}store/admin_orders/generate_test_order" class="btn btn-warning"><i class="fa-solid fa-vial"></i> Generate Test Orders</a>
+        <a href="{$url}store/admin_payments" class="btn btn-primary"><i class="fa-solid fa-cogs"></i> Payment Gateways</a>
+    </div>
+</div>
+
+{if isset($pending) && $pending}
+<div class="card mb-4 border-warning shadow-sm">
+	<div class="card-header bg-warning text-dark font-weight-bold">
+		<i class="fa-solid fa-clock"></i> Pending Payment Orders (Offline / Gateways)
+	</div>
+	<div class="card-body p-0">
+		<table class="table table-hover table-bordered mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>User</th>
+                    <th>Payment Method</th>
+                    <th>Ref ID</th>
+                    <th>Status</th>
+                    <th>Items</th>
+                    <th class="text-right">Action</th>
+                </tr>
+            </thead>
+			<tbody>
+			{foreach from=$pending item=log}
+					<tr>
+						<td>{date("Y-m-d H:i", $log.timestamp)}</td>
+						<td>
+							<a href="{$url}admin/accounts/get/{$log.user_id}" target="_blank">{$log.username}</a>
+						</td>
+                        <td><span class="badge bg-secondary text-uppercase">{$log.payment_method}</span></td>
+                        <td><code>{$log.payment_id}</code></td>
+						<td><span class="badge bg-warning text-dark"><i class="fa-solid fa-hourglass-half"></i> {$log.status}</span></td>
+						<td>
+							<a data-bs-toggle="tooltip" data-placement="top" data-html="true" title="{foreach from=$log.json item=item}{$item.itemName} to {$item.characterName}<br>{/foreach}">{count($log.json)} items</a>
+						</td>
+						<td class="text-right">
+                            <a href="{$url}store/admin_orders/approve_payment/{$log.id}" class="btn btn-success btn-sm" onclick="return confirm('¿Aprobar pago y marcar orden como completada (Realizar pago)?');"><i class="fa-solid fa-check"></i> Realizar pago</a>
+						</td>
+					</tr>
+			{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
+{/if}
+
+<div class="card mb-4">
 	<div class="card-header">
 		Failed orders in the past week
 	</div>
