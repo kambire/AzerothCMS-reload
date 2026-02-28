@@ -27,3 +27,4 @@ $lang['members'] = "Miembros";
 $lang['no_2v2'] = "No hay equipos de 2v2.";
 $lang['no_3v3'] = "No hay equipos de 3v3.";
 $lang['no_5v5'] = "No hay equipos de 5v5.";
+$lang['season_wins'] = "Victorias de temporada";

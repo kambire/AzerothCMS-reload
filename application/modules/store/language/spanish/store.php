@@ -54,3 +54,4 @@ $lang['loading'] = "Cargando...";
 $lang['want_to_buy'] = "¿Estás seguro de que quieres comprar estos objetos?";
 $lang['yes'] = "Sí";
 $lang['free_items'] = "No puedes comprar objetos que cuestan 0 PV o PD.";
+$lang['error_query'] = "Se produjo un error al ejecutar la consulta para este artículo. Tus puntos han sido devueltos.";
