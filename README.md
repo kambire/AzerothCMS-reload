@@ -92,8 +92,16 @@ To run **BlizzGeeks-CMS** flawlessly, your environment should meet the following
 
 ---
 
-## 🎨 Theme Customization
-BlizzGeeks-CMS supports full customization. Tweak colors, layouts, and components directly from the Admin Panel or dive into the `.tpl` files located in the `application/themes/` directory for full HTML/Smarty control.
+## 🤝 Contributing
+Bug reports, feature requests, and pull requests are always welcome! Let's build the best WoW CMS together.
+
+---
+
+## 🙏 Acknowledgments & Credits
+
+**BlizzGeeks-CMS** stands on the shoulders of giants. We want to express our deepest gratitude to the original [FusionCMS Project](https://github.com/FusionWowCMS/FusionCMS), its initial creators, and the brilliant community of developers who contributed to its foundation over the years.
+
+Without their incredible open-source work, dedication, and the countless hours poured into the original framework, this enhanced version would not exist. Thank you for paving the way for the World of Warcraft emulation scene. ❤️
 
 <br>
 
