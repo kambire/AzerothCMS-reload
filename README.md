@@ -1,11 +1,11 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/FusionWowCMS/FusionCMS/main/writable/uploads/logo.png" alt="BlizzGeeks-CMS Logo" width="280" />
+  <img src="https://raw.githubusercontent.com/FusionWowCMS/FusionCMS/main/writable/uploads/logo.png" alt="AzerothCMS Logo" width="280" />
 </div>
 
-<h1 align="center">⚡ BlizzGeeks-CMS ⚡</h1>
+<h1 align="center">⚡ AzerothCMS ⚡</h1>
 
 <div align="center">
-  <strong>The Ultimate Next-Generation CMS for World of Warcraft Private Servers</strong><br>
+  <strong>CMS de emuladores de World of Warcraft</strong><br>
   Built on CodeIgniter 4 | Secure | Fast | Highly Customizable
 </div>
 
@@ -20,9 +20,9 @@
 
 ---
 
-## 📖 What is BlizzGeeks-CMS?
+## 📖 What is AzerothCMS?
 
-**BlizzGeeks-CMS** is a heavily modified and modernized fork of FusionCMS, meticulously crafted to provide Server Owners with the most reliable, visually stunning, and feature-rich web platform. 
+**AzerothCMS** is a heavily modified and modernized fork of FusionCMS, meticulously crafted to provide Server Owners with the most reliable, visually stunning, and feature-rich web platform. 
 
 We took the core framework and stripped away all the annoying bugs, outdated layouts, and clunky mechanics, replacing them with optimized, beautiful features ready for production environments right out of the box.
 
@@ -56,7 +56,7 @@ Smarty Template caching has been reworked to eliminate the need for endless "Cac
 
 ## ⚙️ Server Requirements
 
-To run **BlizzGeeks-CMS** flawlessly, your environment should meet the following specifications:
+To run **AzerothCMS** flawlessly, your environment should meet the following specifications:
 
 | Requirement | Minimum Version | Required Extensions |
 | :--- | :---: | :--- |
@@ -71,7 +71,7 @@ To run **BlizzGeeks-CMS** flawlessly, your environment should meet the following
 1. **Clone the Source Code**  
    Pull the code directly into your web root:
    ```bash
-   git clone https://github.com/kambire/FusionCMS-reload.git /var/www/html
+   git clone https://github.com/kambire/AzerothCMS-reload.git /var/www/html
    ```
 
 2. **Environment Configuration**  
@@ -99,7 +99,7 @@ Bug reports, feature requests, and pull requests are always welcome! Let's build
 
 ## 🙏 Acknowledgments & Credits
 
-**BlizzGeeks-CMS** stands on the shoulders of giants. We want to express our deepest gratitude to the original [FusionCMS Project](https://github.com/FusionWowCMS/FusionCMS), its initial creators, and the brilliant community of developers who contributed to its foundation over the years.
+**AzerothCMS** stands on the shoulders of giants. We want to express our deepest gratitude to the original [FusionCMS Project](https://github.com/FusionWowCMS/FusionCMS), its initial creators, and the brilliant community of developers who contributed to its foundation over the years.
 
 Without their incredible open-source work, dedication, and the countless hours poured into the original framework, this enhanced version would not exist. Thank you for paving the way for the World of Warcraft emulation scene. ❤️
 
