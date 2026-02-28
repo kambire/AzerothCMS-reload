@@ -56,9 +56,30 @@ class Admin extends MX_Controller
             die("Subject and body are required.");
         }
 
-        // Get all users from external account model
-        $users = $this->external_account_model->getAllAccounts();
+        $target_type = $this->input->post('target_type');
+        $test_emails = $this->input->post('test_emails');
+
+        $users = [];
+        if ($target_type === 'test') {
+            $raw_emails = array_map('trim', explode(',', $test_emails));
+            foreach ($raw_emails as $em) {
+                if (!empty($em)) {
+                    $users[] = [
+                        'id' => 0, // Fake ID for test target
+                        'email' => $em
+                    ];
+                }
+            }
+        }
+        else {
+            // Get all users from external account model
+            $users = $this->external_account_model->getAllAccounts();
+        }
+
         $total_users = count($users);
+        if ($total_users === 0) {
+            die("No valid target emails found.");
+        }
 
         $campaign_id = $this->massmail_model->createCampaign([
             'subject' => $subject,
