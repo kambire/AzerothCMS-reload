@@ -7,40 +7,69 @@ class Store_model extends CI_Model
         parent::__construct();
 
         try {
-            // Create the store_payment_methods table if not exists
+            // ── Step 1: Create table (without unique key — added below) ──────────
             $this->db->query("CREATE TABLE IF NOT EXISTS `store_payment_methods` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `name` varchar(255) NOT NULL,
+                `id`           int(11)      NOT NULL AUTO_INCREMENT,
+                `name`         varchar(100) NOT NULL,
                 `display_name` varchar(255) NOT NULL,
-                `is_active` tinyint(1) DEFAULT '0',
-                `config` text DEFAULT NULL,
+                `is_active`    tinyint(1)   DEFAULT '0',
+                `config`       text         DEFAULT NULL,
                 PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 
-            // Seed default gateways (INSERT IGNORE = safe to run on every boot)
-            $this->db->query("INSERT IGNORE INTO store_payment_methods (name, display_name, is_active, config) VALUES
-                ('offline', 'Offline Payment / Bank', 1, '{}'),
-                ('paypal', 'PayPal', 0, '{\"client_id\":\"\",\"secret\":\"\"}'),
-                ('pagopar', 'Pagopar (Paraguay)', 0, '{\"public_key\":\"\",\"private_key\":\"\"}'),
-                ('bancard', 'Bancard vPOS (Paraguay)', 0, '{\"public_key\":\"\",\"private_key\":\"\",\"mode\":\"sandbox\",\"currency\":\"PYG\",\"exchange_rate\":\"7500\"}'),
-                ('skrill', 'Skrill', 0, '{\"merchant_email\":\"\",\"secret_word\":\"\"}')
+            // ── Step 2: Add UNIQUE KEY if missing (prevents duplicates forever) ──
+            $idxCheck = $this->db->query(
+                "SELECT COUNT(*) AS cnt FROM information_schema.STATISTICS
+                 WHERE TABLE_SCHEMA = DATABASE()
+                   AND TABLE_NAME   = 'store_payment_methods'
+                   AND INDEX_NAME   = 'uk_name'"
+            );
+            if ($idxCheck && $idxCheck->getRowArray()['cnt'] == 0) {
+
+                // Delete duplicates first (keep lowest id per name)
+                $this->db->query("
+                    DELETE spm FROM store_payment_methods spm
+                    INNER JOIN store_payment_methods keep
+                        ON spm.name = keep.name AND spm.id > keep.id
+                ");
+
+                // Now it is safe to add the unique index
+                $this->db->query(
+                    "ALTER TABLE store_payment_methods ADD UNIQUE KEY `uk_name` (`name`)"
+                );
+            }
+
+            // ── Step 3: Seed default gateways (INSERT IGNORE now works) ──────────
+            $this->db->query("INSERT IGNORE INTO store_payment_methods
+                                  (name, display_name, is_active, config)
+                              VALUES
+                ('offline', 'Offline Payment / Bank', 1,
+                    '{\"beneficiary\":\"\",\"bank_name\":\"\",\"account_number\":\"\",\"account_type\":\"\",\"currency\":\"PYG\",\"pix_key\":\"\",\"instructions\":\"\"}'),
+                ('paypal', 'PayPal', 0,
+                    '{\"client_id\":\"\",\"secret\":\"\",\"mode\":\"sandbox\",\"currency\":\"USD\"}'),
+                ('pagopar', 'Pagopar (Paraguay)', 0,
+                    '{\"public_key\":\"\",\"private_key\":\"\",\"currency\":\"PYG\"}'),
+                ('bancard', 'Bancard vPOS (Paraguay)', 0,
+                    '{\"public_key\":\"\",\"private_key\":\"\",\"mode\":\"sandbox\",\"currency\":\"PYG\",\"exchange_rate\":\"7500\"}'),
+                ('skrill', 'Skrill', 0,
+                    '{\"merchant_email\":\"\",\"secret_word\":\"\",\"currency\":\"USD\"}')
             ");
 
-            // Add payment columns to order_log if not yet present
+            // ── Step 4: Extend order_log if not yet done ─────────────────────────
             $columnsResult = $this->db->query("SHOW COLUMNS FROM order_log LIKE 'payment_method'");
             if ($columnsResult && $columnsResult->getNumRows() == 0) {
                 $this->db->query("ALTER TABLE order_log
-                    ADD COLUMN payment_method VARCHAR(50) DEFAULT 'points',
-                    ADD COLUMN payment_id VARCHAR(100) DEFAULT NULL,
-                    ADD COLUMN status VARCHAR(20) DEFAULT 'completed',
-                    ADD COLUMN amount DECIMAL(10,2) DEFAULT '0.00'");
+                    ADD COLUMN payment_method VARCHAR(50)   DEFAULT 'points',
+                    ADD COLUMN payment_id     VARCHAR(100)  DEFAULT NULL,
+                    ADD COLUMN status         VARCHAR(20)   DEFAULT 'completed',
+                    ADD COLUMN amount         DECIMAL(10,2) DEFAULT '0.00'");
 
-                $this->db->query("UPDATE order_log SET status = 'completed', payment_method = 'points' WHERE completed = 1");
-                $this->db->query("UPDATE order_log SET status = 'failed', payment_method = 'points' WHERE completed = 0");
+                $this->db->query("UPDATE order_log SET status='completed', payment_method='points' WHERE completed=1");
+                $this->db->query("UPDATE order_log SET status='failed',    payment_method='points' WHERE completed=0");
             }
+
         }
         catch (\Exception $e) {
-            // Migrations are best-effort; don't crash the store if they fail
             log_message('error', 'Store_model migration error: ' . $e->getMessage());
         }
     }

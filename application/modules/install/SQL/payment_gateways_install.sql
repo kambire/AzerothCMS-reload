@@ -20,13 +20,22 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 CREATE TABLE IF NOT EXISTS `store_payment_methods` (
     `id`           INT(11)       NOT NULL AUTO_INCREMENT,
-    `name`         VARCHAR(255)  NOT NULL,
+    `name`         VARCHAR(100)  NOT NULL,
     `display_name` VARCHAR(255)  NOT NULL,
     `is_active`    TINYINT(1)    NOT NULL DEFAULT 0,
     `config`       TEXT                   DEFAULT NULL,
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Clean up any duplicate rows that may exist (keep the lowest id per name)
+DELETE spm FROM `store_payment_methods` spm
+INNER JOIN `store_payment_methods` keep
+    ON spm.name = keep.name AND spm.id > keep.id;
+
+-- Add UNIQUE KEY if it doesn't exist yet (for servers that already have the table)
+ALTER IGNORE TABLE `store_payment_methods`
+    ADD UNIQUE KEY `uk_name` (`name`);
 
 -- Seed default gateways — INSERT IGNORE means safe to re-run
 INSERT IGNORE INTO `store_payment_methods` (`name`, `display_name`, `is_active`, `config`) VALUES
