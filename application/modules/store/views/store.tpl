@@ -117,7 +117,7 @@
 
 												<div class="row g-4" id="group_{$group.id}_realm_{$realmId}">
 													{foreach from=$group.items item=item}
-													<div class="col-md-6 col-lg-4">
+													<div class="col-sm-6 col-md-4 col-lg-3">
 														<div class="store_item card h-100 bg-dark text-white" id="item_{$item.id}" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); transition: transform 0.2s;">
 															
 															<div class="card-body text-center p-4">
@@ -168,7 +168,7 @@
 									{if isset($realm.items.items)}
 										<div class="row g-4 mt-4">
 											{foreach from=$realm.items.items item=item}
-											<div class="col-md-6 col-lg-4">
+											<div class="col-sm-6 col-md-4 col-lg-3">
 												<div class="store_item card h-100 bg-dark text-white" id="item_{$item.id}" style="border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
 													<div class="card-body text-center p-4">
 														<div class="item-icon-wrapper mb-3">
