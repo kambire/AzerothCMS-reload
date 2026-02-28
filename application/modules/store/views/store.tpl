@@ -2,9 +2,25 @@
 	<div class="row">
 
 		{$link_active = "store"}
-		{include file="../../ucp/views/ucp_navigation.tpl"}
 		
-		<div class="col-lg-8 py-lg-5 pb-5 pb-lg-0">
+		{* HORIZONTAL UCP NAVIGATION OVERRIDE FOR STORE *}
+		<div class="col-12 mt-4 mb-2">
+			<div class="d-flex flex-wrap gap-2 justify-content-center p-3 rounded" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.08);">
+				<a href="{$url}ucp" class="btn btn-sm text-white" style="background: rgba(255,255,255,0.1);">
+					<img src="{$CI->user->getAvatar()}" alt="avatar" class="rounded-circle me-2" width="20" height="20">
+					UCP Home
+				</a>
+				{foreach $ucp_menus as $group => $menusGroup}
+					{foreach $menusGroup as $menu}
+						<a href="{$menu.link}" class="btn btn-sm {if $url|cat:$link_active == $menu.link}btn-primary text-white{else}text-light opacity-75{/if}" {if $url|cat:$link_active != $menu.link}style="background: rgba(255,255,255,0.05);"{/if}>
+							{$menu.name}
+						</a>
+					{/foreach}
+				{/foreach}
+			</div>
+		</div>
+		
+		<div class="col-lg-12 pb-5">
 			<div id="store_wrapper">
 				<script type="text/javascript">
 					$(document).ready(function()
@@ -103,12 +119,12 @@
 																</div>
 
 																<h5 class="card-title text-truncate mb-2" style="font-weight: bold; font-size: 1.1rem;">
-																	<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality} text-decoration-none">
+																	<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality} text-decoration-none" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">
 																		{character_limiter($item.name, 35)}
 																	</a>
 																</h5>
 																
-																<p class="card-text text-muted small" style="min-height: 40px; line-height: 1.4;">
+																<p class="card-text small" style="color: rgba(255,255,255,0.75); min-height: 42px; line-height: 1.4;">
 																	{character_limiter($item.description, 60)}
 																</p>
 															</div>
@@ -148,12 +164,12 @@
 														<div class="item-icon-wrapper mb-3">
 															<img class="item_icon rounded shadow-lg" src="{$CI->config->item('api_item_icons')}/large/{$item.icon}.jpg" alt="{$item.name}" style="width: 68px; height: 68px; border: 2px solid #444;" {if $item.tooltip}data-realm="{$item.realm}" rel="item={$item.itemid}"{/if}>
 														</div>
-														<h5 class="card-title text-truncate mb-2">
-															<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality} text-decoration-none">
+														<h5 class="card-title text-truncate mb-2" style="font-weight: bold; font-size: 1.1rem;">
+															<a {if $item.tooltip}href="{$url}item/{$item.realm}/{$item.itemid}" data-realm="{$item.realm}" rel="item={$item.itemid}"{/if} class="item_name q{$item.quality} text-decoration-none" style="text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">
 																{character_limiter($item.name, 35)}
 															</a>
 														</h5>
-														<p class="card-text text-muted small" style="min-height: 40px; line-height: 1.4;">
+														<p class="card-text small" style="color: rgba(255,255,255,0.75); min-height: 42px; line-height: 1.4;">
 															{character_limiter($item.description, 60)}
 														</p>
 													</div>
