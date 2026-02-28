@@ -132,5 +132,11 @@ $route['vote/callback/(:any)'] = "vote/callback/index/$1";
 $route['store/admin_payments'] = "store/admin_payments/index";
 $route['store/admin_payments/(:any)'] = "store/admin_payments/$1";
 
+// Pagopar payment gateway
+$route['donate/pagopar/pay/(:num)'] = "donate/pagopar/pay/$1";
+$route['donate/pagopar/callback'] = "donate/pagopar/callback";
+$route['donate/pagopar/success'] = "donate/pagopar/success";
+$route['donate/pagopar/cancel'] = "donate/pagopar/cancel";
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
