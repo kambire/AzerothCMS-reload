@@ -86,7 +86,7 @@ class External_account_model extends CI_Model
 
         $columnList = formatColumns($columns);
         $conditionColumn = !$where ? column('account', 'id') : column('account', 'username');
-        $conditionValue = !$where ? Services::session()->get('uid') : $where;
+        $conditionValue = !$where ?Services::session()->get('uid') : $where;
 
         return $this->connection->query("SELECT $columnList FROM " . table('account') . " WHERE $conditionColumn = ?", [$conditionValue]);
     }
@@ -95,21 +95,21 @@ class External_account_model extends CI_Model
     {
         switch ($encryption) {
             case 'SPH':
-                if (column('account', 'verifier') && column('account', 'salt')){
+                if (column('account', 'verifier') && column('account', 'salt')) {
                     unset($columns[column('account', 'verifier')]);
                     unset($columns[column('account', 'salt')]);
                 }
                 break;
             case 'SRP':
-                if (column('account', 'sha_pass_hash')){
+                if (column('account', 'sha_pass_hash')) {
                     unset($columns[column('account', 'sha_pass_hash')]);
                 }
                 break;
             case 'SRP6':
-                if (column('account', 'sha_pass_hash')){
+                if (column('account', 'sha_pass_hash')) {
                     unset($columns[column('account', 'sha_pass_hash')]);
                 }
-                if (column('account', 'v') && column('account', 's')){
+                if (column('account', 'v') && column('account', 's')) {
                     unset($columns[column('account', 'v')]);
                     unset($columns[column('account', 's')]);
                 }
@@ -177,15 +177,13 @@ class External_account_model extends CI_Model
 
         list($hash, $data) = $this->setAccountPassword($encryption, $username, $password, $data);
 
-        if (!preg_match("/^cmangos/i", get_class($this->realms->getEmulator())))
-        {
+        if (!preg_match("/^cmangos/i", get_class($this->realms->getEmulator()))) {
             $data[column("account", "last_ip")] = $this->input->ip_address();
         }
 
         $userId = $this->connection->table(table("account"))->insert($data);
 
-        if (preg_match("/^cmangos/i", get_class($this->realms->getEmulator())))
-        {
+        if (preg_match("/^cmangos/i", get_class($this->realms->getEmulator()))) {
             $ip_data = [
                 'accountId' => $userId,
                 'ip' => $this->input->ip_address(),
@@ -216,10 +214,10 @@ class External_account_model extends CI_Model
         // Fix for TrinityCore RBAC (or any emulator with 'rbac')
         if ($this->config->item('rbac')) {
             $rbac_data = [
-                'accountId'    => $userId,
+                'accountId' => $userId,
                 'permissionId' => 195,
-                'granted'      => 1,
-                'realmId'      => -1
+                'granted' => 1,
+                'realmId' => -1
             ];
             $this->connection->table('rbac_account_permissions')->insert($rbac_data);
         }
@@ -235,7 +233,8 @@ class External_account_model extends CI_Model
 
         if ($row[0]['total']) {
             $this->db->query("UPDATE daily_signups SET amount = amount + 1 WHERE `date`=?", [date("Y-m-d")]);
-        } else {
+        }
+        else {
             $this->db->query("INSERT INTO daily_signups(`date`, amount) VALUES(?, ?)", [date("Y-m-d"), 1]);
         }
     }
@@ -256,7 +255,8 @@ class External_account_model extends CI_Model
             $row = $query->getResultArray();
 
             return $row[0];
-        } elseif (query('get_ip_banned')) {
+        }
+        elseif (query('get_ip_banned')) {
             //check if the ip is banned
             $query = $this->connection->query(query("get_ip_banned"), [$this->input->ip_address(), time()]);
 
@@ -264,7 +264,8 @@ class External_account_model extends CI_Model
                 $row = $query->getResultArray();
 
                 return $row[0];
-            } else {
+            }
+            else {
                 return false;
             }
         }
@@ -283,7 +284,8 @@ class External_account_model extends CI_Model
 
         if (!$value) {
             $value = $this->getId();
-        } elseif ($isUsername) {
+        }
+        elseif ($isUsername) {
             $value = $this->getId($value);
         }
 
@@ -297,7 +299,8 @@ class External_account_model extends CI_Model
             }
 
             return $row[0]["gmlevel"];
-        } else {
+        }
+        else {
             return 0;
         }
     }
@@ -316,7 +319,8 @@ class External_account_model extends CI_Model
 
         if ($count) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -350,7 +354,8 @@ class External_account_model extends CI_Model
 
         if ($count) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -369,16 +374,17 @@ class External_account_model extends CI_Model
 
         if ($count) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
 
     /*
-    | -------------------------------------------------------------------
-    |  Setters
-    | -------------------------------------------------------------------
-    */
+     | -------------------------------------------------------------------
+     |  Setters
+     | -------------------------------------------------------------------
+     */
     public function setUsername($oldUsername, $newUsername)
     {
         $this->connect();
@@ -399,7 +405,7 @@ class External_account_model extends CI_Model
         if (column("account", "v") && column("account", "s") && column("account", "sessionkey")) {
             $data = [
                 column("account", "v") => "",
-                column("account", "s")  => "",
+                column("account", "s") => "",
                 column("account", "sessionkey") => "",
             ];
         }
@@ -441,8 +447,7 @@ class External_account_model extends CI_Model
 
         $builder = $this->connection->table(table("account"));
 
-        if ($username)
-        {
+        if ($username) {
             // Update only the expansion column for the given username
             $builder->where(column("account", "username"), $username);
         }
@@ -457,9 +462,11 @@ class External_account_model extends CI_Model
 
         if (preg_match("/^trinity/i", get_class($this->realms->getEmulator()))) {
             $this->connection->table(table("account_access"))->where(column("account", "id"), $userId)->update([column("account_access", "SecurityLevel") => $newRank]);
-        } elseif (preg_match("/^cmangos/i", get_class($this->realms->getEmulator()))) {
+        }
+        elseif (preg_match("/^cmangos/i", get_class($this->realms->getEmulator()))) {
             $this->connection->table(table("account"))->where(column("account", "id"), $userId)->update([column("account", "gmlevel") => $newRank]);
-        } else {
+        }
+        else {
             $this->connection->table(table("account_access"))->where(column("account", "id"), $userId)->update([column("account_access", "gmlevel") => $newRank]);
         }
     }
@@ -477,21 +484,23 @@ class External_account_model extends CI_Model
             ];
 
             $this->connection->table(table("account_logons"))->insert($data);
-        } else {
+        }
+        else {
             $this->connection->table(table("account"))->where(column("account", "id"), $userId)->update([column("account", "last_ip") => $ip]);
         }
     }
 
     /*
-    | -------------------------------------------------------------------
-    |  Getters
-    | -------------------------------------------------------------------
-    */
+     | -------------------------------------------------------------------
+     |  Getters
+     | -------------------------------------------------------------------
+     */
     public function getId($username = false)
     {
         if (!$username) {
             return $this->id;
-        } else {
+        }
+        else {
             $this->connect();
 
             $query = $this->connection->table(table("account"))->select(column("account", "id", true))->where(column("account", "username"), $username)->get();
@@ -500,7 +509,8 @@ class External_account_model extends CI_Model
                 $result = $query->getResultArray();
 
                 return $result[0]["id"];
-            } else {
+            }
+            else {
                 //Return id 0
                 return false;
             }
@@ -517,7 +527,8 @@ class External_account_model extends CI_Model
     {
         if (!$id) {
             return $this->username;
-        } else {
+        }
+        else {
             $this->connect();
 
             $query = $this->connection->table(table("account"))->select(column("account", "username", true))->where([column("account", "id") => $id])->get();
@@ -526,7 +537,8 @@ class External_account_model extends CI_Model
                 $result = $query->getResultArray();
 
                 return $result[0]["username"];
-            } else {
+            }
+            else {
                 return "Unknown";
             }
         }
@@ -558,7 +570,8 @@ class External_account_model extends CI_Model
             $result = $query->getResultArray();
 
             return $result[0];
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -572,11 +585,13 @@ class External_account_model extends CI_Model
     {
         if (!$id) {
             return $this->email;
-        } else {
+        }
+        else {
             // Check if it has been loaded already
             if (array_key_exists($id, $this->account_cache)) {
                 return $this->account_cache[$id]['email'];
-            } else {
+            }
+            else {
                 $this->connect();
 
                 $query = $this->connection->table(table("account"))
@@ -589,7 +604,8 @@ class External_account_model extends CI_Model
                     $this->account_cache[$id] = $result[0];
 
                     return $result[0]["email"];
-                } else {
+                }
+                else {
                     $this->account_cache[$id]["email"] = false;
 
                     return false;
@@ -602,11 +618,13 @@ class External_account_model extends CI_Model
     {
         if (!$email) {
             return $this->id;
-        } else {
+        }
+        else {
             // Check if it has been loaded already
             if (array_key_exists($email, $this->account_cache)) {
                 return $this->account_cache[$email]['id'];
-            } else {
+            }
+            else {
                 $this->connect();
 
                 ;
@@ -617,13 +635,28 @@ class External_account_model extends CI_Model
                     $this->account_cache[$email] = $result[0];
 
                     return $result[0]["id"];
-                } else {
+                }
+                else {
                     $this->account_cache[$email]["id"] = false;
 
                     return false;
                 }
             }
         }
+    }
+
+    /**
+     * Get all accounts
+     *
+     * @return array
+     */
+    public function getAllAccounts()
+    {
+        $this->connect();
+
+        $query = $this->connection->table(table("account"))->select(column("account", "id") . "," . column("account", "email"))->get();
+
+        return $query->getResultArray();
     }
 
     public function getJoinDate(): string
@@ -664,11 +697,13 @@ class External_account_model extends CI_Model
             $hash = $this->crypto->SRP6($username, $newPassword);
             $data[column("account", "salt")] = $hash["salt"];
             $data[column("account", "verifier")] = $hash["verifier"];
-        } else if ($encryption == 'SRP') {
+        }
+        else if ($encryption == 'SRP') {
             $hash = $this->crypto->SRP($username, $newPassword);
             $data[column("account", "salt")] = $hash["salt"];
             $data[column("account", "verifier")] = $hash["verifier"];
-        } else {
+        }
+        else {
             $hash = $this->crypto->SHA_PASS_HASH($username, $newPassword);
             $data[column("account", "sha_pass_hash")] = $hash["verifier"];
         }
@@ -688,12 +723,14 @@ class External_account_model extends CI_Model
             $battleData['srp_version'] = 2;
             $battleData[column("battlenet_accounts", "salt")] = $hash["salt"];
             $battleData[column("battlenet_accounts", "verifier")] = $hash["verifier"];
-        } else if ($this->config->item('battle_net_encryption') == 'SRP6_V1') {
+        }
+        else if ($this->config->item('battle_net_encryption') == 'SRP6_V1') {
             $hash = $this->crypto->BnetSRP6_V1($email, $newPassword);
             $battleData['srp_version'] = 1;
             $battleData[column("battlenet_accounts", "salt")] = $hash["salt"];
             $battleData[column("battlenet_accounts", "verifier")] = $hash["verifier"];
-        } else {
+        }
+        else {
             $hash = $this->crypto->SHA_PASS_HASH_V2($email, $newPassword);
             $battleData[column("battlenet_accounts", "sha_pass_hash")] = $hash["verifier"];
         }

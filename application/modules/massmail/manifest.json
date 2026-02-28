@@ -1,0 +1,31 @@
+{
+    "name": "Mass Mail",
+    "description": "Send bulk emails to all your users with rate limiting.",
+    "version": "1.0.0",
+    "date": "2026-02-28",
+    "author": {
+        "name": "FusionCMS",
+        "website": "https://fusion-hub.com"
+    },
+    "permissions": {
+        "view": {
+            "default": false,
+            "description": "View and manage mass mail campaigns"
+        }
+    },
+    "admin": [
+        {
+            "text": "Marketing",
+            "icon": "envelope",
+            "links": [
+                {
+                    "text": "Mass Mail",
+                    "icon": "envelope",
+                    "controller": "admin",
+                    "requirePermission": "view"
+                }
+            ]
+        }
+    ],
+    "enabled": true
+}

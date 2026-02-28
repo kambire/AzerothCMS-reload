@@ -19,14 +19,16 @@ class Smartyengine extends Smarty
         //$this->setCacheDir(WRITEPATH . 'cache/templates/cache');
         //$this->setConfigDir('/some/config/dir');
         $this->setTemplateDir(APPPATH);
+        $this->setForceCompile(true);
+        $this->setCaching(Smarty::CACHING_OFF);
         $this->assign('APPPATH', APPPATH);
         $this->assign('BASEPATH', BASEPATH);
 
         // Assign CodeIgniter object by reference to CI
-        $CI = &get_instance();
+        $CI = & get_instance();
         $this->assign('ci', $CI);
 
-        if(!empty($plugins = glob(APPPATH . 'ThirdParty/Smarty/Tags/function.*.php'))){
+        if (!empty($plugins = glob(APPPATH . 'ThirdParty/Smarty/Tags/function.*.php'))) {
             foreach ($plugins as $plugin) {
                 require_once $plugin;
                 $name = str_replace(['function.', '.php'], '', basename($plugin));
@@ -37,7 +39,9 @@ class Smartyengine extends Smarty
 
         try {
             $this->php_functions_extend();
-        } catch (Exception) {}
+        }
+        catch (Exception) {
+        }
 
         log_message('debug', "Smarty Class Initialized");
     }
@@ -73,17 +77,20 @@ class Smartyengine extends Smarty
             }
 
             if (!$return) {
-                $CI = &get_instance();
+                $CI = & get_instance();
                 if (method_exists($CI->output, 'set_output')) {
                     $CI->output->set_output($this->fetch($template));
-                } else {
+                }
+                else {
                     $CI->output->final_output = $this->fetch($template);
                 }
                 exit();
-            } else {
+            }
+            else {
                 return $this->fetch($template);
             }
-        } catch (\Smarty\Exception | Exception $e) {
+        }
+        catch (\Smarty\Exception|Exception $e) {
             return "<span style='color:red;'><div style='font-size:16px;color:black;font-weight:bold;text-align:center;'>An error has occured while trying to load the requested view.</div><br /><br /><b>Template path:</b> " . $template . "<br /><br /><b>Error:</b> " . nl2br(preg_replace("/Stack trace\:/", "<br /><b>Stack trace:</b>", $e)) . "</span>";
         }
     }
@@ -93,7 +100,7 @@ class Smartyengine extends Smarty
      */
     private function php_functions_extend(): void
     {
-        $functions = array_merge(array_diff(get_defined_functions()['internal'], ['reset', 'key', 'end', 'preg_match', 'preg_match_all']) , [
+        $functions = array_merge(array_diff(get_defined_functions()['internal'], ['reset', 'key', 'end', 'preg_match', 'preg_match_all']), [
             # Codeigniter
             'get_instance', 'base_url', 'config', 'config_item', 'form_open', 'form_open_multipart',
             'form_hidden', 'form_input', 'form_password', 'form_upload', 'form_submit', 'form_error',
@@ -114,21 +121,26 @@ class Smartyengine extends Smarty
             $this->registerPlugin(Smarty::PLUGIN_MODIFIER, $php_function, $php_function);
         }
 
-        function smarty_modifier_reset(object|array $array): mixed {
+        function smarty_modifier_reset(object|array $array): mixed
+        {
             return reset($array);
         }
-        function smarty_modifier_key(object|array $array): string|int|null {
+        function smarty_modifier_key(object|array $array): string|int|null
+        {
             return key($array);
         }
-        function smarty_modifier_end(object|array $array): mixed {
+        function smarty_modifier_end(object|array $array): mixed
+        {
             return end($array);
         }
-        function smarty_modifier_preg_match($pattern, $input, $flags = null, $offset = null): mixed {
+        function smarty_modifier_preg_match($pattern, $input, $flags = null, $offset = null): mixed
+        {
             preg_match($pattern, $input, $matches, $flags, $offset);
 
             return $matches;
         }
-        function smarty_modifier_preg_match_all($pattern, $input, $flags = null, $offset = null): mixed {
+        function smarty_modifier_preg_match_all($pattern, $input, $flags = null, $offset = null): mixed
+        {
             preg_match_all($pattern, $input, $matches, $flags, $offset);
 
             return $matches;

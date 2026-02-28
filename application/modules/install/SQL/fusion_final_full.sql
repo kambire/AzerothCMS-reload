@@ -346,7 +346,9 @@ INSERT INTO `acl_group_roles` (`group_id`, `role_name`, `module`) VALUES
 (8, 'manageBans', 'gm'),
 (8, 'manageTickets', 'gm'),
 (8, 'sendItems', 'gm'),
-(8, 'viewHistory', 'gm');
+(8, 'viewHistory', 'gm'),
+(7, 'view', 'massmail'),
+(8, 'view', 'massmail');
 
 
 -- ----------------------------
@@ -1191,8 +1193,9 @@ CREATE TABLE `store_groups`  (
 -- ----------------------------
 -- Records of store_groups
 -- ----------------------------
-INSERT INTO `store_groups` (`id`, `title`, `orderNumber`) VALUES
-(1, 'Test group', 1);
+INSERT INTO `store_groups` (`id`, `title`, `icon`, `orderNumber`) VALUES
+(1, 'Mounts & Pets', 'fa-solid fa-paw', 1),
+(2, 'VIP & Services', 'fa-solid fa-star', 2);
 
 -- ----------------------------
 -- Table structure for store_items
@@ -1224,6 +1227,10 @@ CREATE TABLE `store_items`  (
 -- ----------------------------
 -- Records of store_items
 -- ----------------------------
+INSERT INTO `store_items` (`id`, `itemid`, `itemcount`, `name`, `quality`, `vp_price`, `dp_price`, `realm`, `description`, `icon`, `group`, `query`, `query_database`, `query_need_character`, `command`, `command_need_character`, `require_character_offline`, `tooltip`) VALUES
+(1, '50818', '1', 'Invincible''s Reins', 4, 150, 20, 1, 'Teaches you how to summon this mount. This is a very fast mount.', 'ability_mount_pegasus', 1, NULL, '', 0, NULL, 0, 0, 1),
+(2, '49284', '1', 'Reins of the Swift Spectral Tiger', 4, 200, 25, 1, 'Teaches you how to summon this mount.', 'ability_mount_spectraltiger', 1, NULL, '', 0, NULL, 0, 0, 1),
+(3, '54847', '1', 'Lil'' K.T.', 4, 50, 10, 1, 'Right Click to summon and dismiss Lil'' K.T.', 'inv_pet_lilkt', 1, NULL, '', 0, NULL, 0, 0, 1);
 
 -- ----------------------------
 -- Table structure for tag
@@ -1379,5 +1386,38 @@ CREATE TABLE `sideboxes_spotlight` (
 -- ----------------------------
 -- Records of sideboxes_spotlight
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for mail_campaigns
+-- ----------------------------
+DROP TABLE IF EXISTS `mail_campaigns`;
+CREATE TABLE `mail_campaigns` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subject` varchar(255) NOT NULL,
+  `body` text NOT NULL,
+  `status` enum('pending','sending','completed','paused') DEFAULT 'pending',
+  `emails_per_hour` int(11) DEFAULT '50',
+  `total_users` int(11) DEFAULT '0',
+  `sent_users` int(11) DEFAULT '0',
+  `last_batch_at` int(11) DEFAULT '0',
+  `created_at` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=Dynamic;
+
+-- ----------------------------
+-- Table structure for mail_queue
+-- ----------------------------
+DROP TABLE IF EXISTS `mail_queue`;
+CREATE TABLE `mail_queue` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `campaign_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `status` enum('pending','sent','failed') DEFAULT 'pending',
+  `sent_at` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `campaign_id` (`campaign_id`),
+  KEY `status` (`status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=Dynamic;
 
 SET FOREIGN_KEY_CHECKS=1;

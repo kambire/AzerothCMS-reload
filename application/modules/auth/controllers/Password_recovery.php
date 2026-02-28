@@ -25,8 +25,7 @@ class Password_recovery extends MX_Controller
 
         requirePermission("view");
 
-        if (!$this->config->item('has_smtp'))
-        {
+        if (!$this->config->item('has_smtp')) {
             redirect('errors');
         }
     }
@@ -55,23 +54,22 @@ class Password_recovery extends MX_Controller
 
         $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email');
 
-        if ($use_captcha && $captcha_type == 'inbuilt')
-        {
+        if ($use_captcha && $captcha_type == 'inbuilt') {
             $this->form_validation->set_rules('captcha', 'captcha', 'trim|required|exact_length[7]|alpha_numeric');
         }
 
         $this->form_validation->set_error_delimiters('', '');
-        
+
         $data = [
-            "messages" => false,
-            "success" => []
+            "messages" => [
+                "error" => "",
+                "success" => ""
+            ]
         ];
 
-        if ($this->form_validation->run())
-        {
+        if ($this->form_validation->run()) {
             //Check captcha
-            if ($use_captcha)
-            {
+            if ($use_captcha) {
                 $data['showCaptcha'] = true;
 
                 if ($captcha_type == 'inbuilt') {
@@ -79,43 +77,57 @@ class Password_recovery extends MX_Controller
                         $data['messages']["error"] = lang("captcha_invalid", "auth");
                         die(json_encode($data));
                     }
-                } else if ($captcha_type == 'recaptcha') {
+                }
+                else if ($captcha_type == 'recaptcha') {
                     $recaptcha = $this->input->post('recaptcha');
                     $result = $this->recaptcha->verifyResponse($recaptcha)['success'];
                     if (!$result) {
                         $data['messages']["error"] = lang("captcha_invalid", "auth") . $result;
                         die(json_encode($data));
                     }
-                } else if ($captcha_type == 'recaptcha3') {
+                }
+                else if ($captcha_type == 'recaptcha3') {
                     $recaptcha = $this->input->post('recaptcha');
                     $score = $this->recaptcha->verifyScore($recaptcha);
-                    if($score < 0.5) {
+                    if ($score < 0.5) {
                         $data['messages']["error"] = lang("captcha_invalid", "auth");
                         die(json_encode($data));
                     }
                 }
             }
-            
+
             $email = $this->input->post("email");
-            
-            if ($this->external_account_model->emailExists($email))
-            {
+
+            if ($this->external_account_model->emailExists($email)) {
                 $username = $this->password_recovery_model->get_username($email);
                 $token = $this->generate_token($username, $email);
 
                 $link = base_url() . 'password_recovery/reset_password?token=' . $token;
-                sendMail($email, $this->config->item('server_name') . ': ' . lang("reset_password", "recovery"), $username, lang("email", "recovery") . ' <a href="' . $link . '">' . $link . '</a>', 1);
+                $mailStatus = sendMail($email, $this->config->item('server_name') . ': ' . lang("reset_password", "recovery"), $username, lang("email", "recovery") . ' <a href="' . $link . '">' . $link . '</a>', 1);
 
-                $this->password_recovery_model->insert_token($token, $username, $email, $this->input->ip_address());
-                $this->dblogger->createLog("user", "recovery", "Password recovery requested", [], Dblogger::STATUS_SUCCEED, $this->user->getId($username));
+                if ($mailStatus === true) {
+                    $this->password_recovery_model->insert_token($token, $username, $email, $this->input->ip_address());
+                    $this->dblogger->createLog("user", "recovery", "Password recovery requested", [], Dblogger::STATUS_SUCCEED, $this->user->getId($username));
+                    $data['messages']["success"] = lang("email_sent", "recovery");
+                }
+                else {
+                    $debugMsg = is_string($mailStatus) ? $mailStatus : "Unknown error";
+                    if (strlen($debugMsg) > 5000)
+                        $debugMsg = substr($debugMsg, 0, 5000) . "... (truncated)";
+                    $data['messages']["error"] = "Error sending email: " . $debugMsg;
+                }
             }
-            
-            $data['messages']["success"] = lang("email_sent", "recovery");
+            else {
+                $data['messages']["error"] = "No account found with that email address.";
+            }
         }
-        else
-        {
+        else {
             $data['messages']["error"] = validation_errors();
         }
+
+        if (ob_get_length())
+            ob_clean();
+        header('Content-Type: application/json');
         die(json_encode($data));
     }
 
@@ -128,22 +140,19 @@ class Password_recovery extends MX_Controller
 
         $this->form_validation->set_error_delimiters('', '');
 
-        if ($this->input->method() === 'post')
-        {
-            if ($this->form_validation->run())
-            {
+        if ($this->input->method() === 'post') {
+            if ($this->form_validation->run()) {
                 $new_password = $this->input->post('new_password');
                 $token = $this->input->post('token');
                 $token_data = $this->password_recovery_model->get_token($token);
 
-                if (!$token_data)
-                {
+                if (!$token_data) {
                     $data['messages']["error"] = lang('invalid', 'recovery');
                     die(json_encode($data));
                 }
 
                 $this->external_account_model->setPassword($token_data['username'], $token_data['email'], $new_password);
-                
+
                 $this->dblogger->createLog("user", "recovery", "Password changed via reset", [], Dblogger::STATUS_SUCCEED, $this->user->getId($token_data['username']));
 
                 $this->password_recovery_model->delete_token($token);
@@ -151,8 +160,7 @@ class Password_recovery extends MX_Controller
                 $data['messages']["success"] = lang("password_reset_success", "recovery");
                 die(json_encode($data));
             }
-            else
-            {
+            else {
                 $data['messages']["error"] = validation_errors();
                 die(json_encode($data));
             }

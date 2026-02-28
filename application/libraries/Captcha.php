@@ -32,7 +32,7 @@ class Captcha
     public function __construct($enable = true)
     {
         //Load CI Instance
-        $this->CI = &get_instance();
+        $this->CI = & get_instance();
 
         $this->CI->load->helper('captcha');
 
@@ -87,7 +87,7 @@ class Captcha
 
         $hexCode = array_map('hexdec', str_split($hexCode, 2));
 
-        foreach ($hexCode as & $color) {
+        foreach ($hexCode as &$color) {
             $adjustableLimit = $adjustPercent < 0 ? $color : 255 - $color;
             $adjustAmount = ceil($adjustableLimit * $adjustPercent);
 
@@ -116,22 +116,25 @@ class Captcha
             0.0722 * pow($B1 / 255, 2.2);
 
         $L2 = 0.2126 * pow($R2BlackColor / 255, 2.2) +
-                0.7152 * pow($G2BlackColor / 255, 2.2) +
-                0.0722 * pow($B2BlackColor / 255, 2.2);
+            0.7152 * pow($G2BlackColor / 255, 2.2) +
+            0.0722 * pow($B2BlackColor / 255, 2.2);
 
         $contrastRatio = 0;
         if ($L1 > $L2) {
             $contrastRatio = (int)(($L1 + 0.05) / ($L2 + 0.05));
-        } else {
+        }
+        else {
             $contrastRatio = (int)(($L2 + 0.05) / ($L1 + 0.05));
         }
 
         // If contrast is more than 5, return black color
         if ($contrastRatio > 10) {
             return $this->adjustBrightness($hexColor, -0.3);
-        } elseif ($contrastRatio > 5) {
+        }
+        elseif ($contrastRatio > 5) {
             return $this->adjustBrightness($hexColor, 0.7);
-        } else {
+        }
+        else {
             return $this->adjustBrightness($hexColor, 0.7);
         }
     }
@@ -149,21 +152,21 @@ class Captcha
         $gridColor = $this->getContrastColor($textColor);
 
         $vals = [
-            'word'          => $this->getValue(),
-            'img_path'      => FCPATH . '/writable/uploads/captcha/',
-            'img_url'       => pageURL . '/writable/uploads/captcha/',
+            'word' => $this->getValue(),
+            'img_path' => FCPATH . '/writable/uploads/captcha/',
+            'img_url' => pageURL . '/writable/uploads/captcha/',
 
-            'img_width'     => $width,
-            'img_height'    => $height,
+            'img_width' => $width,
+            'img_height' => $height,
 
-            'font_size'     => 16,
-            'font_path'     => APPPATH . 'fonts/Roboto-Regular.ttf',
+            'font_size' => 16,
+            'font_path' => APPPATH . 'fonts/Roboto-Regular.ttf',
 
-            'colors'        => [
+            'colors' => [
                 'background' => sscanf($bgColor, "#%02x%02x%02x"),
-                'border'     => sscanf($textColor, "#%02x%02x%02x"),
-                'text'       => sscanf($textColor, "#%02x%02x%02x"),
-                'grid'       => sscanf($gridColor, "#%02x%02x%02x")
+                'border' => sscanf($textColor, "#%02x%02x%02x"),
+                'text' => sscanf($textColor, "#%02x%02x%02x"),
+                'grid' => sscanf($gridColor, "#%02x%02x%02x")
             ]
         ];
 
@@ -172,11 +175,19 @@ class Captcha
         // Define the headers and output it
         header("Cache-Control: no-cache, must-revalidate");
         header("Content-type: image/png");
-        $image = imagecreatefromjpeg($vals["img_path"] . $cap["filename"]);
-        imagejpeg($image);
+
+        if (str_ends_with($cap["filename"], '.jpg') || str_ends_with($cap["filename"], '.jpeg')) {
+            $image = imagecreatefromjpeg($vals["img_path"] . $cap["filename"]);
+            imagepng($image);
+        }
+        else {
+            $image = imagecreatefrompng($vals["img_path"] . $cap["filename"]);
+            imagepng($image);
+        }
 
         //Delete Captcha after view
         unlink($vals["img_path"] . $cap["filename"]);
+        imagedestroy($image);
         die();
     }
 

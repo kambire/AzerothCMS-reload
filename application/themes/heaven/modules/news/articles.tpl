@@ -41,22 +41,22 @@
 	{if !$is_single}
 		{* Build: Article *}
 		{capture append=item}
-			<div class="item type-{$ci_module} -compact {if $iterator == 0}-lg{else}-md{/if}" {if $item.thumbnail}style="--thumbnail: url('{$item.thumbnail}');"{/if}>
+			<div class="item type-{$ci_module} -list-view" style="display: flex; flex-direction: column; padding: 25px; margin-bottom: 20px; background: rgba(0,0,0,0.4); border-radius: 8px; border-left: 4px solid var(--primary-color, #007bff);">
 				<h2 hidden>{$item.headline}</h2>
 
-				{* Article: Thumbnail *}
-				{if $item.thumbnail}<div class="item-thumbnail"></div>{/if}
-
 				{* Article: Info *}
-				<div class="item-info">
-					{* Info: Date *}
-					<time datetime="{$item.date}" class="info-date" title="{$item.date}">{$item.date}</time>
-
+				<div class="item-info" style="width: 100%;">
 					{* Info: Title *}
-					<a href="{$url}news/view/{$item.id}/{$item.SEOurl}" class="info-title text-ellipsis" title="{$item.headline}">{$item.headline}</a>
+					<a href="{$url}news/view/{$item.id}/{$item.SEOurl}" class="info-title text-ellipsis" title="{$item.headline}" style="font-size: 1.8rem; font-weight: bold; padding-bottom: 10px; display: block; color: var(--primary-color, #007bff); text-decoration: none;">{$item.headline}</a>
+
+					{* Info: Date *}
+					<div style="font-size: 0.9rem; color: #aaa; margin-bottom: 15px;">
+						<i class="fa fa-clock"></i> <time datetime="{$item.date}" class="info-date" title="{$item.date}">{$item.date}</time>
+						&nbsp; | &nbsp; <i class="fa fa-user"></i> {$item.author}
+					</div>
 
 					{* Info: Summary *}
-					<div class="info-summary">{strip_tags($item.summary)}</div>
+					<div class="info-summary" style="font-size: 1.1rem; line-height: 1.6; color: rgba(255,255,255, 0.82); margin-bottom: 20px;">{strip_tags($item.summary)}</div>
 
 					{* Info: Buttons *}
 					<div class="info-buttons">
@@ -67,7 +67,7 @@
 		{/capture}
 
 		{* Gather: Article *}
-		{$news[(($iterator == 0) ? 1 : (($iterator <= 3) ? 2 : 3))] = $news[(($iterator == 0) ? 1 : (($iterator <= 3) ? 2 : 3))]|cat:$item[0]}
+		{$news[1] = $news[1]|cat:$item[0]}
 	{/if}
 
 	{*----------------------------------------------------------------------*}
@@ -83,50 +83,30 @@
 	{if $is_single}
 		{* Build: Article *}
 		{capture append=item}
-			<div class="item type-{$ci_module} -full">
+			<div class="item type-{$ci_module} -full" style="padding: 25px; background: rgba(0,0,0,0.4); border-radius: 8px;">
 				<h2 hidden>{$item.headline}</h2>
 
 				{* Article: Head *}
-				<div class="item-head">
-					<a href="{$url}news/view/{$item.id}/{$item.SEOurl}" class="head-title text-ellipsis" title="{$item.headline}">{$item.headline}</a>
-					<span class="head-metadata">{lang('posted_by', 'news')} <a href="{$url}profile/{$item.author_id}" data-tip="{lang('view_profile', 'news')}">{$item.author}</a> {lang('on', 'news')} {$item.date}</span>
+				<div class="item-head" style="margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px;">
+					<a href="{$url}news/view/{$item.id}/{$item.SEOurl}" class="head-title text-ellipsis" title="{$item.headline}" style="font-size: 2.5rem; font-weight: bold; color: var(--primary-color, #007bff);">{$item.headline}</a>
+					<div class="head-metadata" style="margin-top: 10px; font-size: 1rem; color: #aaa;">
+						{lang('posted_by', 'news')} <a href="{$url}profile/{$item.author_id}" data-tip="{lang('view_profile', 'news')}" style="font-weight: bold; color: #fff;">{$item.author}</a> {lang('on', 'news')} {$item.date}
+					</div>
 				</div>
 
 				{* Article: Body *}
 				<div class="item-body">
-					{if $item.type}
-						<div class="body-thumbnail type-{$item.type}">
-							{if $item.type == '1'}
-								{*--------------------- Image ---------------------*}
-
-								{if count($item.type_content) >= 2}
-									<div class="owl-carousel owl-theme owl-dots-inside[pos:bottom]" owl>
-										{foreach from=$item.type_content item=thumbnail}
-											<div class="thumbnail-item" style="background-image: url('{$writable_path}uploads/news/{$thumbnail}');"></div>
-										{/foreach}
-									</div>
-								{else}
-									<div class="thumbnail-item" style="background-image: url('{$writable_path}uploads/news/{$item.type_content[0]}');"></div>
-								{/if}
-							{elseif $item.type == '2'}
-								{*--------------------- Video ---------------------*}
-
-								<iframe class="thumbnail-item" width="100%" height="100%" alt="" src="{$item.type_content}" allowfullscreen></iframe>
-							{/if}
-						</div>
-					{/if}
-
-					<div class="body-content">{$item.content}</div>
+					<div class="body-content" style="font-size: 1.15rem; line-height: 1.7;">{$item.content}</div>
 
 					{if $item.tags && is_array($item.tags)}
-						<div class="body-tags">
+						<div class="body-tags" style="margin-top: 30px;">
 							{foreach from=$item.tags item=tag}
-								<a href="{$url}/news/{$tag.name}">{$tag.name}</a>
+								<a href="{$url}/news/{$tag.name}" style="background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px; font-size: 0.9rem; margin-right: 10px;">{$tag.name}</a>
 							{/foreach}
 						</div>
 					{/if}
 
-					{if $item.comments != -1}<div {$item.comments_id} class="body-comments" news-comments></div>{/if}
+					{if $item.comments != -1}<div {$item.comments_id} class="body-comments" news-comments style="margin-top: 40px;"></div>{/if}
 				</div>
 			</div>
 		{/capture}
@@ -150,22 +130,8 @@
 			{if $is_single}
 				{$news}
 			{else}
-				<div class="row g-3">
-					<div class="col-xl-12 {if $news[2]}col-xxl-5{/if}">
-						{$news[1]}
-					</div>
-
-					{if $news[2]}
-						<div class="col-xl-12 col-xxl-7">
-							{$news[2]}
-						</div>
-					{/if}
-
-					{if $news[3]}
-						<div class="col-xl-12">
-							{$news[3]}
-						</div>
-					{/if}
+				<div class="news-list-container" style="display: flex; flex-direction: column; gap: 20px;">
+					{$news[1]}
 				</div>
 			{/if}
 		</div>
