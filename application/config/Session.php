@@ -1,4 +1,5 @@
-<?php namespace App\Config;
+<?php
+namespace App\Config;
 
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Session\Handlers\BaseHandler;
@@ -19,7 +20,7 @@ class Session extends BaseConfig
      *
      * @var class-string<BaseHandler>
      */
-    public string $driver = DatabaseHandler::class;
+    public string $driver = 'CodeIgniter\\Session\\Handlers\\FileHandler';
 
     /**
      * --------------------------------------------------------------------------
@@ -55,7 +56,7 @@ class Session extends BaseConfig
      *
      * IMPORTANT: You are REQUIRED to set a valid save path!
      */
-    public string $savePath = 'ci_sessions';
+    public string $savePath = WRITEPATH . 'session';
 
     /**
      * --------------------------------------------------------------------------

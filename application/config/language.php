@@ -18,7 +18,7 @@ if (! defined('BASEPATH')) {
   | Also acts as fallback language
   |
  */
-$config['language'] = "english";
+$config['language'] = 'spanish';
 
 /*
   |--------------------------------------------------------------------------

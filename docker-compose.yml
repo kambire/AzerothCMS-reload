@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: fusioncms_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - fusioncms_network
+
+  db:
+    image: mariadb:10.11
+    container_name: fusioncms_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: fusioncms
+      MYSQL_USER: fusioncms
+      MYSQL_PASSWORD: fusioncms
+    ports:
+      - "33066:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/initdb:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "healthcheck.sh", "--connect", "--innodb_initialized" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fusioncms_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: fusioncms_pma
+    restart: always
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      UPLOAD_LIMIT: 512M
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - fusioncms_network
+
+networks:
+  fusioncms_network:
+    driver: bridge
+
+volumes:
+  db_data:

@@ -23,7 +23,7 @@ $config["captcha_type"] = 'inbuilt';
  * After how many tries should a captcha pop up?
  *
  */
-$config['captcha_attemps'] = 3;
+$config['captcha_attemps'] = 9999; // Desactivado: nunca aparece automaticamente
 
 /**
  *
@@ -31,7 +31,7 @@ $config['captcha_attemps'] = 3;
  * How many minutes should an IP address remain blocked?
  *
  */
-$config['block_attemps'] = 5;
+$config['block_attemps'] = 9999; // Desactivado: nunca bloquea por intentos
 $config['block_duration'] = 15;
 
 /**

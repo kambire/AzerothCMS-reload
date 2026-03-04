@@ -1,0 +1,78 @@
+<?php
+
+namespace App\Config;
+
+use CodeIgniter\Database\Config;
+
+/**
+ * INSTRUCCIONES: Copia este archivo como: application/config/Database.php
+ * y completa con tus credenciales de base de datos.
+ *
+ * Con Docker local (recomendado):
+ *   hostname => "db"          (nombre del servicio en docker-compose)
+ *   username => "root"
+ *   password => "root"
+ *
+ * En producción (servidor real):
+ *   hostname => "tu-servidor-mysql.com" o IP
+ */
+class Database extends Config
+{
+    public string $defaultGroup = "cms";
+
+    /** Base de datos principal del CMS */
+    public array $cms = [
+        "DSN"          => "",
+        "hostname"     => "db",            // TODO: Cambiar en producción
+        "username"     => "root",           // TODO: Cambiar en producción
+        "password"     => "root",           // TODO: Cambiar en producción
+        "database"     => "fusioncms",      // TODO: Nombre de tu base de datos
+        "DBDriver"     => "MySQLi",
+        "DBPrefix"     => "",
+        "pConnect"     => false,
+        "DBDebug"      => false,
+        "charset"      => "utf8mb4",
+        "DBCollat"     => "utf8mb4_general_ci",
+        "swapPre"      => "",
+        "encrypt"      => false,
+        "compress"     => false,
+        "strictOn"     => false,
+        "failover"     => [],
+        "port"         => 3306,
+        "numberNative" => false,
+        "foundRows"    => false,
+        "dateFormat"   => [
+            "date"     => "Y-m-d",
+            "datetime" => "Y-m-d H:i:s",
+            "time"     => "H:i:s",
+        ],
+    ];
+
+    /** Base de datos de autenticación WoW (acore_auth / auth) */
+    public array $account = [
+        "DSN"          => "",
+        "hostname"     => "db",            // TODO: Cambiar en producción
+        "username"     => "root",           // TODO: Cambiar en producción
+        "password"     => "root",           // TODO: Cambiar en producción
+        "database"     => "acore_auth",     // TODO: Nombre de tu base de datos WoW
+        "DBDriver"     => "MySQLi",
+        "DBPrefix"     => "",
+        "pConnect"     => false,
+        "DBDebug"      => false,
+        "charset"      => "utf8",
+        "DBCollat"     => "utf8_general_ci",
+        "swapPre"      => "",
+        "encrypt"      => false,
+        "compress"     => false,
+        "strictOn"     => false,
+        "failover"     => [],
+        "port"         => 3306,
+        "numberNative" => false,
+        "foundRows"    => false,
+        "dateFormat"   => [
+            "date"     => "Y-m-d",
+            "datetime" => "Y-m-d H:i:s",
+            "time"     => "H:i:s",
+        ],
+    ];
+}

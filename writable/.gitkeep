@@ -1,0 +1,3 @@
+# Esta carpeta es necesaria para la aplicacion pero su contenido no se sube al repositorio.
+# El servidor web necesita permisos de escritura sobre esta carpeta:
+#   chmod -R 775 writable/

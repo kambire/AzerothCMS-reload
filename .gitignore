@@ -1,18 +1,63 @@
-*/config/development
+# ================================================================
+# FusionCMS / AzerothCMS - .gitignore
+# ================================================================
+
+# -------------------------------------------------------------------
+# ARCHIVOS DE CONFIGURACION SENSIBLES (NUNCA subir al repo)
+# Copia los archivos .dist correspondientes y quita el .dist para usarlos
+# -------------------------------------------------------------------
+application/config/Database.php
+application/config/fusion.php
+application/config/smtp.php
+application/config/owner.php
+
+# -------------------------------------------------------------------
+# LOGS y CACHE - Generados en tiempo de ejecucion
+# -------------------------------------------------------------------
 */logs/log-*.php
 !*/logs/index.html
 */cache/*
 !system/cache/*
 !*/cache/index.html
 !*/cache/.htaccess
+*/config/development
 
-application/config/database.php
-application/config/fusion.php
+# -------------------------------------------------------------------
+# WRITABLE - Archivos generados por la app (uploads, sesiones, cache)
+# -------------------------------------------------------------------
 writable/*
+!writable/.gitkeep
 
+# -------------------------------------------------------------------
+# DOCKER - Dumps de datos reales (pueden contener info personal)
+# -------------------------------------------------------------------
+docker/dumps/
+migrar_a_docker.bat
+
+# -------------------------------------------------------------------
+# NODE / PHP DEPENDENCIES
+# -------------------------------------------------------------------
+node_modules/
+vendor/
+!vendor/fusion-cms/
 .php-cs-fixer.cache
+
+# -------------------------------------------------------------------
+# INSTALACION
+# -------------------------------------------------------------------
 install/.lock
-/application/config/owner.php
-/vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/
-/vendor/**/.git
+writable/install/.lock
+
+# -------------------------------------------------------------------
+# IDEs y Sistemas Operativos
+# -------------------------------------------------------------------
 /.idea/
+/.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -------------------------------------------------------------------
+# GIT SUBMODULES
+# -------------------------------------------------------------------
+/vendor/**/.git

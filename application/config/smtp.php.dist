@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @package FusionCMS
+ * INSTRUCCIONES: Copia este archivo como: application/config/smtp.php
+ * y completa con tus credenciales SMTP reales.
+ */
+
+$config['use_own_smtp_settings'] = 0;              // 1 = usar config de abajo, 0 = usar config del panel admin
+$config['smtp_sender'] = 'noreply@example.com';    // Tu email remitente
+$config['smtp_protocol'] = 'smtp';
+$config['smtp_host']   = 'mail.example.com';       // Host de tu servidor SMTP
+$config['smtp_user']   = 'noreply@example.com';    // Usuario SMTP
+$config['smtp_pass']   = 'YOUR_SMTP_PASSWORD';     // Contraseña SMTP
+$config['smtp_port']   = 465;                       // Puerto (465=SSL, 587=TLS, 25=plain)
+$config['smtp_crypto'] = 'ssl';                     // 'ssl', 'tls', o '' para sin cifrado
