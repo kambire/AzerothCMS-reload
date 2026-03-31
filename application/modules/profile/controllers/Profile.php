@@ -48,25 +48,16 @@ class Profile extends MX_Controller
 
             $account_data = $this->internal_user_model->getValue("account_data", "id", $this->id, "public_profile");
             
-            if (is_array($account_data) || $account_data === false) {
+            if ($account_data === false || !is_array($account_data) || !isset($account_data["public_profile"])) {
                 $is_public = 1;
             } else {
-                $is_public = (int)$account_data;
+                $is_public = (int)$account_data["public_profile"];
             }
 
             if ($this->config->item('enable_profile_privacy') && !$own && $is_public === 0 && !hasPermission("view", "admin")) {
                 $out = $this->getPrivateError();
                 $this->username = lang("private_profile", "profile");
             } else {
-                if (isset($_GET['debug123'])) {
-                    die(json_encode([
-                        'profileId' => $this->id,
-                        'account_data' => $account_data,
-                        'is_array' => is_array($account_data),
-                        'is_false' => $account_data === false,
-                        'db' => $this->db->database
-                    ]));
-                }
                 // Check if we can use the cache
                 $cache = $this->cache->get("profile_" . $this->id . $own);
 
