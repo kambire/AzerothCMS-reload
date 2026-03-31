@@ -89,7 +89,7 @@ class Accounts extends MX_Controller
                 'expansions' => $this->realms->getExpansions(),
                 'guestId' => $this->config->item('default_guest_group'),
                 'groups' => $this->acl_model->getGroups(),
-                'userGroup' => $userGroup[0]['id'],
+                'userGroup' => !empty($userGroup) && isset($userGroup[0]['id']) ? $userGroup[0]['id'] : $this->config->item('default_guest_group'),
                 'banstatus' => $this->external_account_model->getBannedStatus($data['id']),
                 "avatar"    => $this->user->getAvatar($data['id']),
                 "groups" => $this->acl_model->getGroupsByUser($data['id']),

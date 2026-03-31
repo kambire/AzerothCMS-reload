@@ -132,12 +132,13 @@ class Internal_user_model extends CI_Model
 
             if ($query->getNumRows() > 0) {
                 $result = $query->getResultArray();
+                $nickname = $result[0]['nickname'];
             } else {
-                $result[0]['nickname'] = "";
+                $nickname = "";
             }
 
-            if (strlen($result[0]['nickname']) > 0) {
-                return $result[0]['nickname'];
+            if (strlen($nickname) > 0) {
+                return $nickname;
             } else {
                 return $this->external_account_model->getUsername($id);
             }
