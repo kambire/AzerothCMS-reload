@@ -1434,3 +1434,4 @@ CREATE TABLE pending_accounts (
   key varchar(255) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+INSERT INTO \email_templates\ (\id\, \	emplate_name\) VALUES (2, 'register_activation.tpl') ON DUPLICATE KEY UPDATE \	emplate_name\='register_activation.tpl';

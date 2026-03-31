@@ -162,7 +162,7 @@ class Register extends MX_Controller
 
                 $link = base_url().'register/activate/'.$key;
 
-                sendMail($email, $this->config->item('server_name').': ' . lang('activate_account', 'register'), $username, lang('created_account_activate', 'register') . ' <a href="' . $link . '">' . $link . '</a>', 1);
+                sendMail($email, $this->config->item('server_name').': ' . lang('activate_account', 'register'), $username, lang('created_account_activate', 'register') . ' <a href="' . $link . '">' . $link . '</a>', 2);
             }
             else
             {

@@ -2,10 +2,9 @@
 <html lang="es">
     <head>
         <meta charset="utf-8">
-        <title>Recuperación de Contraseña</title>
+        <title>Verificación de Cuenta</title>
         <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap" rel="stylesheet">
         <style>
-            /* Estilos adicionales para mejorar la visualización en móviles */
             @media only screen and (max-width: 600px) {
                 .container { width: 100% !important; }
                 .button { width: 100% !important; text-align: center; }
@@ -27,7 +26,7 @@
                 <tbody>
                     <tr>
                         <td style="padding: 40px 30px 10px; color: #161c2d;">
-                            <h2 style="font-size: 20px; font-weight: 700; margin: 0;">¡Hola, <?php echo $username; ?>!</h2>
+                            <h2 style="font-size: 20px; font-weight: 700; margin: 0;">¡Bienvenido/a, <?php echo $username; ?>!</h2>
                         </td>
                     </tr>
                     
@@ -35,11 +34,10 @@
                         <td style="padding: 10px 30px 20px; color: #556070; line-height: 1.6;">
                             <?php echo $message; ?>
                             <p style="margin-top: 20px;">
-                                Haz clic en el siguiente botón para restablecer tu contraseña. Este enlace expirará en poco tiempo por razones de seguridad.
+                                Nos alegra mucho tenerte en nuestra comunidad. Haz clic en el botón inferior para activar tu cuenta y poder ingresar al juego.
                             </p>
                         </td>
                     </tr>
-
                     <?php 
                         preg_match('/href="([^"]+)"/', $message, $match);
                         $action_url = isset($match[1]) ? $match[1] : $url; 
@@ -47,7 +45,7 @@
                     <tr>
                         <td style="padding: 20px 30px; text-align: center;">
                             <a href="<?php echo $action_url; ?>" style="background-color: #2f55d4; color: #ffffff; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: 600; font-size: 16px; display: inline-block;">
-                                Restablecer Contraseña
+                                Activar Cuenta
                             </a>
                         </td>
                     </tr>
@@ -61,7 +59,7 @@
 
                     <tr>
                         <td style="padding: 20px 30px; border-top: 1px solid #edf2f7; color: #8492a6; font-size: 14px; font-style: italic;">
-                            Si no has solicitado este cambio, puedes ignorar este correo de forma segura. Tu contraseña seguirá siendo la misma hasta que utilices el enlace de arriba.
+                            Si no abriste esta cuenta, puedes usar nuestro equipo de soporte para comunicarte con nosotros.
                         </td>
                     </tr>
 
