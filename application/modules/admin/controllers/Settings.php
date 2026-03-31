@@ -98,6 +98,9 @@ class Settings extends MX_Controller
         $config['totp_secret'] = $this->config->item('totp_secret');
         $config['totp_secret_name'] = $this->config->item('totp_secret_name');
 
+        // Load activation config
+        require "application/modules/register/config/activation.php";
+
         // Prepare my data
         $data = [
             'url' => $this->template->page_url,
@@ -182,6 +185,10 @@ class Settings extends MX_Controller
         $fusionConfig->set('smtp_crypto', $this->input->post('smtp_crypto'));
 
         $fusionConfig->save();
+
+        $activationConfig = new ConfigEditor("application/modules/register/config/activation.php");
+        $activationConfig->set('enable_email_activation', $this->input->post('enable_email_activation') == '1');
+        $activationConfig->save();
 
         die('yes');
     }

@@ -407,4 +407,5 @@ $lang = [
     'auth_settings_help' => 'Settings related to Realmd/Logon/Auth database and account password encryption.',
     'add_new_realm' => 'Add a new realm',
     'host' => 'Host',
+    'settings_enable_email_activation' => 'Habilitar verificación de correo en el registro',
 ];

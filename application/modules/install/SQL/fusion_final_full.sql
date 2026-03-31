@@ -1421,3 +1421,16 @@ CREATE TABLE `mail_queue` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=Dynamic;
 
 SET FOREIGN_KEY_CHECKS=1;
+DROP TABLE IF EXISTS pending_accounts;
+CREATE TABLE pending_accounts (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  username varchar(50) NOT NULL,
+  password varchar(255) NOT NULL,
+  secret_key varchar(255) NOT NULL,
+  secret_iv varchar(255) NOT NULL,
+  email varchar(255) NOT NULL,
+  	imestamp int(11) NOT NULL,
+  ip varchar(50) NOT NULL,
+  key varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

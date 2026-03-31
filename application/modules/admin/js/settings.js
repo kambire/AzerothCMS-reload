@@ -242,6 +242,7 @@ var Settings = {
 	saveSmtpSettings: function()
 	{
 		var data = {
+			enable_email_activation:$("#enable_email_activation").val(),
 			use_own_smtp_settings:$("#use_own_smtp_settings").val(),
 			smtp_protocol:$("#smtp_protocol").val(),
 			smtp_sender:$("#smtp_sender").val(),

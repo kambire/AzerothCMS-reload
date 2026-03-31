@@ -514,6 +514,16 @@
         <div class="tab-pane" id="smtp">
         <form role="form" onSubmit="Settings.saveSmtpSettings(); return false">
 			<div class="form-group row mb-1">
+			<label class="col-sm-2 col-form-label" for="enable_email_activation">{lang('settings_enable_email_activation', 'admin')}</label>
+			<div class="col-sm-10">
+			<select class="form-control nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-600 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer w-full cursor-pointer appearance-none border bg-white font-sans focus:shadow-lg px-2 pe-9 h-10 py-2 text-sm leading-5 px-3 pe-6 rounded px-3" id="enable_email_activation">
+				<option value="1" {if $config.enable_email_activation}selected{/if}>Yes</option>
+				<option value="0" {if !$config.enable_email_activation}selected{/if}>No</option>
+			</select>
+			</div>
+            </div>
+
+			<div class="form-group row mb-1">
 			<label class="col-sm-2 col-form-label" for="use_own_smtp_settings">{lang('settings_use_own_smtp_settings_enter_them_below', 'admin')}</label>
 			<div class="col-sm-10">
 			<select class="form-control nui-focus border-muted-300 text-muted-600 placeholder:text-muted-300 focus:border-muted-300 focus:shadow-muted-300/50 dark:border-muted-700 dark:bg-muted-900/75 dark:text-muted-200 dark:placeholder:text-muted-600 dark:focus:border-muted-700 dark:focus:shadow-muted-800/50 peer w-full cursor-pointer appearance-none border bg-white font-sans focus:shadow-lg px-2 pe-9 h-10 py-2 text-sm leading-5 px-3 pe-6 rounded px-3" id="use_own_smtp_settings" onChange="Settings.toggleSMTPusage(this)">
