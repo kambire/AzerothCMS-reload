@@ -47,7 +47,12 @@ class Profile extends MX_Controller
             $own = ($this->id == $this->user->getId()) ? "_own" : null;
 
             $account_data = $this->internal_user_model->getValue("account_data", "id", $this->id, "public_profile");
-            $is_public = (is_array($account_data) && isset($account_data['public_profile'])) ? (int)$account_data['public_profile'] : 1;
+            
+            if (is_array($account_data) || $account_data === false) {
+                $is_public = 1;
+            } else {
+                $is_public = (int)$account_data;
+            }
 
             if ($this->config->item('enable_profile_privacy') && !$own && $is_public === 0 && !hasPermission("view", "admin")) {
                 $out = $this->getPrivateError();
