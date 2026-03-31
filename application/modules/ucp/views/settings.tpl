@@ -31,6 +31,12 @@
 								<input class="form-check-input" type="checkbox" id="public_profile" name="public_profile" {if $public_profile == 1}checked{/if}>
 								<label class="form-check-label" for="public_profile"><small>{lang("public_profile_desc", "ucp")}</small></label>
 							</div>
+							<div class="mt-2">
+								<a href="{$url}profile/{$id}" target="_blank" class="btn border text-muted-500 hover:text-white dark:border-muted-600 border-muted-300 dark:hover:bg-muted-700 hover:bg-muted-100 hover:text-muted-700 w-full sm:w-auto mt-2">
+									<i class="fa-duotone fa-user mr-1"></i> {lang("view_profile", "ucp")}
+								</a>
+								<small class="text-muted block mt-1"><em>*(Abre una ventana incógnito para testear cómo te ven los demás)</em></small>
+							</div>
 						</div>
 					</div>
 					{/if}

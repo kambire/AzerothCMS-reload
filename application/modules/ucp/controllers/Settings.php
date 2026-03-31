@@ -43,6 +43,7 @@ class Settings extends MX_Controller
             'show_language_chooser' => $this->config->item('show_language_chooser'),
             'userLanguage' => $this->language->getLanguage(),
             "avatar" => $this->user->getAvatar($this->user->getId()),
+            "id" => $this->user->getId(),
 
             "config" => [
                 "vote" => $this->config->item('ucp_vote'),

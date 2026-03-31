@@ -65,6 +65,7 @@ $lang['invalid_language'] = "Invalid language";
 $lang['change_information'] = "Change information";
 $lang['public_profile'] = "Public Profile";
 $lang['public_profile_desc'] = "Allow other users to view your user profile and characters on the Armory.";
+$lang['view_profile'] = "View my public profile";
 
 // Security
 $lang['account_security'] = "Account Security";
