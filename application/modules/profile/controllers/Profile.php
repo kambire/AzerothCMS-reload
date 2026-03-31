@@ -58,6 +58,14 @@ class Profile extends MX_Controller
                 $out = $this->getPrivateError();
                 $this->username = lang("private_profile", "profile");
             } else {
+                if (isset($_GET['debug123'])) {
+                    die(json_encode([
+                        'cfg' => $this->config->item('enable_profile_privacy'),
+                        'own' => $own,
+                        'is_public' => $is_public,
+                        'has_admin' => hasPermission("view", "admin")
+                    ]));
+                }
                 // Check if we can use the cache
                 $cache = $this->cache->get("profile_" . $this->id . $own);
 
