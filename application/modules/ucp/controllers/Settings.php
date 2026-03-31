@@ -38,6 +38,7 @@ class Settings extends MX_Controller
         $settings_data = array(
             'nickname' => $this->user->getNickname(),
             'location' => $this->internal_user_model->getLocation(),
+            'public_profile' => $this->internal_user_model->isProfilePublic(),
             'show_language_chooser' => $this->config->item('show_language_chooser'),
             'userLanguage' => $this->language->getLanguage(),
             "avatar" => $this->user->getAvatar($this->user->getId()),
@@ -104,8 +105,9 @@ class Settings extends MX_Controller
 
         $nickname = $this->input->post("nickname");
         $location = $this->input->post("location");
+        $public_profile = $this->input->post("public_profile");
 
-        if (!is_string($nickname) || !is_string($location)) {
+        if (!is_string($nickname) || !is_string($location) || !is_string($public_profile)) {
             die("4");
         }
 
@@ -113,6 +115,7 @@ class Settings extends MX_Controller
             // Update sanitization according to CMS standards.
             'nickname' => $this->template->format($nickname),
             'location' => $this->template->format($location),
+            'public_profile' => intval($public_profile),
         );
 
         // Change language

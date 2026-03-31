@@ -84,6 +84,7 @@ var Settings = {
 	{
 		var value = $("#nickname_field").val(),
 			loc = $("#location_field").val(),
+			publicProfile = $("#public_profile").is(':checked') ? 1 : 0,
 			language;
 
 		if($("#language_field"))
@@ -119,6 +120,7 @@ var Settings = {
 			{
 				nickname: value,
 				location: loc,
+				public_profile: publicProfile,
 				language: language,
 				csrf_token_name: Config.CSRF
 			},

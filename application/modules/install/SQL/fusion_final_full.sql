@@ -1435,3 +1435,4 @@ CREATE TABLE pending_accounts (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO \email_templates\ (\id\, \	emplate_name\) VALUES (2, 'register_activation.tpl') ON DUPLICATE KEY UPDATE \	emplate_name\='register_activation.tpl';
+ALTER TABLE \ccount_data\ ADD COLUMN \public_profile\ INT(1) NOT NULL DEFAULT 1;

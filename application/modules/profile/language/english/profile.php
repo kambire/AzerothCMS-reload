@@ -14,6 +14,8 @@
 
 $lang['doesnt_exist'] = "User doesn't exist";
 $lang['doesnt_exist_long'] = "The requested user does not exist.";
+$lang['private_profile'] = "Private Profile";
+$lang['private_profile_long'] = "This player has set their profile to private. You cannot view their characters or details.";
 $lang['nickname'] = "Nickname";
 $lang['location'] = "Location";
 $lang['account_status'] = "Account Status";

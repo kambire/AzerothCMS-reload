@@ -63,6 +63,8 @@ $lang['nickname_taken'] = "El apodo ya está en uso";
 $lang['invalid_language'] = "Idioma inválido";
 
 $lang['change_information'] = "Cambiar información";
+$lang['public_profile'] = "Perfil Público";
+$lang['public_profile_desc'] = "Permitir que otros vean mi perfil de usuario y personajes en el Armory.";
 
 // Security
 $lang['account_security'] = "Seguridad de la cuenta";

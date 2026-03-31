@@ -22,6 +22,16 @@
 							<input class="form-control" type="text" id="location_field" name="location_field" placeholder="{lang("location", "ucp")}" value="{$location}">
 						</div>
 					</div>
+
+					<div class="form-group row">
+						<label class="col-sm-3 col-form-label" for="public_profile">{lang("public_profile", "ucp")}</label>
+						<div class="col-sm-9">			
+							<div class="form-check form-switch mt-2">
+								<input class="form-check-input" type="checkbox" id="public_profile" name="public_profile" {if $public_profile == 1}checked{/if}>
+								<label class="form-check-label" for="public_profile"><small>{lang("public_profile_desc", "ucp")}</small></label>
+							</div>
+						</div>
+					</div>
 					
 					{if $show_language_chooser}
 						<div class="form-group row">

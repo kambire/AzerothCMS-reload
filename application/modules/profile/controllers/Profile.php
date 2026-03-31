@@ -46,8 +46,15 @@ class Profile extends MX_Controller
         if (is_numeric($this->id)) {
             $own = ($this->id == $this->user->getId()) ? "_own" : null;
 
-            // Check if we can use the cache
-            $cache = $this->cache->get("profile_" . $this->id . $own);
+            $account_data = $this->internal_user_model->getValue("account_data", "id", $this->id, "public_profile");
+            $is_public = (is_array($account_data) && isset($account_data['public_profile'])) ? (int)$account_data['public_profile'] : 1;
+
+            if (!$own && $is_public === 0 && !hasPermission("view", "admin")) {
+                $out = $this->getPrivateError();
+                $this->username = lang("private_profile", "profile");
+            } else {
+                // Check if we can use the cache
+                $cache = $this->cache->get("profile_" . $this->id . $own);
 
             if ($cache !== false) {
                 // Use the cache
@@ -58,6 +65,7 @@ class Profile extends MX_Controller
                 $out = $this->getProfile();
 
                 $this->cache->save("profile_" . $this->id . $own, array("content" => $out, "username" => $this->username), 60 * 60);
+            }
             }
 
             $this->template->setTitle($this->username);
@@ -130,6 +138,17 @@ class Profile extends MX_Controller
             "module" => "default",
             "headline" => lang("doesnt_exist", "profile"),
             "content" => "<center style='margin:10px;font-weight:bold;'>" . lang("doesnt_exist_long", "profile") . "</center>"
+        );
+
+        return $this->template->loadPage("page.tpl", $data);
+    }
+
+    private function getPrivateError()
+    {
+        $data = array(
+            "module" => "default",
+            "headline" => lang("private_profile", "profile"),
+            "content" => "<center style='margin:10px;font-weight:bold;'>" . lang("private_profile_long", "profile") . "</center>"
         );
 
         return $this->template->loadPage("page.tpl", $data);

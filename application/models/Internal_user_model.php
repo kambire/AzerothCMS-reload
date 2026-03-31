@@ -21,6 +21,7 @@ class Internal_user_model extends CI_Model
     private $total_votes;
     private $permissionCache;
     private $language;
+    private $public_profile;
 
     public function __construct()
     {
@@ -38,6 +39,7 @@ class Internal_user_model extends CI_Model
             $this->nickname = "";
             $this->language = $this->config->item('language');
             $this->avatarId = 1;
+            $this->public_profile = 1;
         }
     }
 
@@ -66,6 +68,7 @@ class Internal_user_model extends CI_Model
             $this->nickname = $result[0]['nickname'];
             $this->language = $result[0]['language'];
             $this->avatarId = $result[0]['avatar'];
+            $this->public_profile = isset($result[0]['public_profile']) ? $result[0]['public_profile'] : 1;
         } else {
             $this->makeNew();
         }
@@ -83,7 +86,8 @@ class Internal_user_model extends CI_Model
             'location' => "Unknown",
             'nickname' => $this->external_account_model->getUsername(),
             'language' => $this->config->item('language'),
-            'avatar' => 1
+            'avatar' => 1,
+            'public_profile' => 1
         );
 
         $this->db->table('account_data')->insert($array);
@@ -93,6 +97,7 @@ class Internal_user_model extends CI_Model
         $this->location = "Unknown";
         $this->nickname = $this->external_account_model->getUsername();
         $this->avatarId = 1;
+        $this->public_profile = 1;
     }
 
     public function nicknameExists($nickname)
@@ -202,6 +207,11 @@ class Internal_user_model extends CI_Model
     public function getLocation(): string
     {
         return $this->location;
+    }
+
+    public function isProfilePublic(): int
+    {
+        return $this->public_profile;
     }
 
     public function getLanguage(): ?string
