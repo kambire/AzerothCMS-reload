@@ -60,10 +60,11 @@ class Profile extends MX_Controller
             } else {
                 if (isset($_GET['debug123'])) {
                     die(json_encode([
-                        'cfg' => $this->config->item('enable_profile_privacy'),
-                        'own' => $own,
-                        'is_public' => $is_public,
-                        'has_admin' => hasPermission("view", "admin")
+                        'profileId' => $this->id,
+                        'account_data' => $account_data,
+                        'is_array' => is_array($account_data),
+                        'is_false' => $account_data === false,
+                        'db' => $this->db->database
                     ]));
                 }
                 // Check if we can use the cache
