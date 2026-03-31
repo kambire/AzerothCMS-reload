@@ -116,8 +116,11 @@ class Settings extends MX_Controller
             // Update sanitization according to CMS standards.
             'nickname' => $this->template->format($nickname),
             'location' => $this->template->format($location),
-            'public_profile' => intval($public_profile),
         );
+
+        if ($this->config->item('enable_profile_privacy')) {
+            $values['public_profile'] = intval($public_profile);
+        }
 
         // Change language
         if ($this->config->item('show_language_chooser')) {
@@ -134,7 +137,7 @@ class Settings extends MX_Controller
 
         // Remove the nickname field if it wasn't changed
         if ($values['nickname'] == $this->user->getNickname()) {
-            $values = array('location' => $location);
+            unset($values['nickname']);
         } elseif (
             strlen($values['nickname']) < 4
             || strlen($values['nickname']) > 14
