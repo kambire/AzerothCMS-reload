@@ -214,6 +214,7 @@ var Settings = {
 			vote_reminder_image:$("#vote_reminder_image").val(),
 			reminder_interval:$("#reminder_interval").val(),
 			has_smtp:$("#has_smtp").val(),
+			enable_profile_privacy:$("#enable_profile_privacy").val(),
 			csrf_token_name: Config.CSRF
 		};
 

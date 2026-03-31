@@ -23,6 +23,7 @@
 						</div>
 					</div>
 
+					{if $enable_profile_privacy}
 					<div class="form-group row">
 						<label class="col-sm-3 col-form-label" for="public_profile">{lang("public_profile", "ucp")}</label>
 						<div class="col-sm-9">			
@@ -32,6 +33,7 @@
 							</div>
 						</div>
 					</div>
+					{/if}
 					
 					{if $show_language_chooser}
 						<div class="form-group row">

@@ -39,6 +39,7 @@ class Settings extends MX_Controller
             'nickname' => $this->user->getNickname(),
             'location' => $this->internal_user_model->getLocation(),
             'public_profile' => $this->internal_user_model->isProfilePublic(),
+            'enable_profile_privacy' => $this->config->item('enable_profile_privacy'),
             'show_language_chooser' => $this->config->item('show_language_chooser'),
             'userLanguage' => $this->language->getLanguage(),
             "avatar" => $this->user->getAvatar($this->user->getId()),

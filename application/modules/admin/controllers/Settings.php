@@ -42,6 +42,7 @@ class Settings extends MX_Controller
         $config['vote_reminder_image'] = $this->config->item('vote_reminder_image');
         $config['reminder_interval'] = $this->config->item('reminder_interval');
         $config['has_smtp'] = $this->config->item('has_smtp');
+        $config['enable_profile_privacy'] = $this->config->item('enable_profile_privacy');
 
         // Performance
         $config['disable_visitor_graph'] = $this->config->item('disable_visitor_graph');
@@ -141,6 +142,7 @@ class Settings extends MX_Controller
         $fusionConfig->set('vote_reminder_image', $this->input->post('vote_reminder_image'));
         $fusionConfig->set('reminder_interval', $this->input->post('reminder_interval') * 60 * 60);
         $fusionConfig->set('has_smtp', $this->input->post('has_smtp'));
+        $fusionConfig->set('enable_profile_privacy', $this->input->post('enable_profile_privacy'));
         $fusionConfig->set('max_expansion', $this->input->post('max_expansion'));
 
         $fusionConfig->save();
