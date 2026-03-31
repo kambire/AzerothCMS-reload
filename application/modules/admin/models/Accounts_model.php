@@ -98,16 +98,20 @@ class Accounts_model extends CI_Model
 
     public function getAccessId($userId = 0)
     {
-        if (preg_match("/mangos/i", get_class($this->realms->getEmulator()))) {
-            $query = $this->connection->query("SELECT " . column("account", "gmlevel", true) . " FROM " . table("account") . " WHERE " . column("account", "id") . " = ?", array($userId));
-        } else {
-            $query = $this->connection->query("SELECT " . column("account_access", "gmlevel", true) . " FROM " . table("account_access") . " WHERE " . column("account_access", "id") . " = ?", array($userId));
-        }
+        try {
+            if (preg_match("/mangos/i", get_class($this->realms->getEmulator()))) {
+                $query = $this->connection->query("SELECT " . column("account", "gmlevel", true) . " FROM " . table("account") . " WHERE " . column("account", "id") . " = ?", array($userId));
+            } else {
+                $query = $this->connection->query("SELECT " . column("account_access", "gmlevel", true) . " FROM " . table("account_access") . " WHERE " . column("account_access", "id") . " = ?", array($userId));
+            }
 
-        if ($query->getNumRows() > 0) {
-            $result = $query->getResultArray();
-            return $result[0];
-        } else {
+            if ($query && $query->getNumRows() > 0) {
+                $result = $query->getResultArray();
+                return $result[0];
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
             return false;
         }
     }

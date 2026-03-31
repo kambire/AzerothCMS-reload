@@ -460,14 +460,18 @@ class External_account_model extends CI_Model
     {
         $this->connect();
 
-        if (preg_match("/^trinity/i", get_class($this->realms->getEmulator()))) {
-            $this->connection->table(table("account_access"))->where(column("account", "id"), $userId)->update([column("account_access", "SecurityLevel") => $newRank]);
-        }
-        elseif (preg_match("/^cmangos/i", get_class($this->realms->getEmulator()))) {
-            $this->connection->table(table("account"))->where(column("account", "id"), $userId)->update([column("account", "gmlevel") => $newRank]);
-        }
-        else {
-            $this->connection->table(table("account_access"))->where(column("account", "id"), $userId)->update([column("account_access", "gmlevel") => $newRank]);
+        try {
+            if (preg_match("/^trinity/i", get_class($this->realms->getEmulator()))) {
+                $this->connection->table(table("account_access"))->where(column("account", "id"), $userId)->update([column("account_access", "SecurityLevel") => $newRank]);
+            }
+            elseif (preg_match("/^cmangos/i", get_class($this->realms->getEmulator()))) {
+                $this->connection->table(table("account"))->where(column("account", "id"), $userId)->update([column("account", "gmlevel") => $newRank]);
+            }
+            else {
+                $this->connection->table(table("account_access"))->where(column("account", "id"), $userId)->update([column("account_access", "gmlevel") => $newRank]);
+            }
+        } catch (\Exception $e) {
+            // Silence misconfiguration exception
         }
     }
 
