@@ -1395,7 +1395,7 @@ CREATE TABLE `mail_campaigns` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `subject` varchar(255) NOT NULL,
   `body` text NOT NULL,
-  `status` enum('pending','sending','completed','paused') DEFAULT 'pending',
+  `status` enum('pending','sending','completed','paused','error') DEFAULT 'pending',
   `emails_per_hour` int(11) DEFAULT '50',
   `total_users` int(11) DEFAULT '0',
   `sent_users` int(11) DEFAULT '0',
@@ -1429,10 +1429,24 @@ CREATE TABLE pending_accounts (
   secret_key varchar(255) NOT NULL,
   secret_iv varchar(255) NOT NULL,
   email varchar(255) NOT NULL,
-  	imestamp int(11) NOT NULL,
+  timestamp int(11) NOT NULL,
   ip varchar(50) NOT NULL,
   key varchar(255) NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 INSERT INTO \email_templates\ (\id\, \	emplate_name\) VALUES (2, 'register_activation.tpl') ON DUPLICATE KEY UPDATE \	emplate_name\='register_activation.tpl';
 ALTER TABLE \ccount_data\ ADD COLUMN \public_profile\ INT(1) NOT NULL DEFAULT 1;
+
+-- ----------------------------
+-- Table structure for mail_errors
+-- ----------------------------
+DROP TABLE IF EXISTS mail_errors;
+CREATE TABLE mail_errors (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  campaign_id int(11) NOT NULL,
+  email varchar(255) NOT NULL,
+  error_message text NOT NULL,
+  timestamp int(11) NOT NULL,
+  PRIMARY KEY (id),
+  KEY campaign_id (campaign_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=Dynamic;

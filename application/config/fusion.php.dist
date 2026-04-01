@@ -54,3 +54,13 @@ $config['analytics'] = false;
 
 /* Cache system */
 $config['cache'] = false;
+
+/* Mass Mail Settings */
+$config['massmail_default_emails_per_hour'] = 50;
+$config['massmail_sender_name'] = 'FusionCMS';
+$config['massmail_cron_key'] = 'AzerothCronSecret2026';
+$config['massmail_smtp_host'] = '';
+$config['massmail_smtp_user'] = '';
+$config['massmail_smtp_pass'] = '';
+$config['massmail_smtp_port'] = 465;
+$config['massmail_smtp_crypto'] = 'ssl';
