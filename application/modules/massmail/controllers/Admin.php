@@ -40,7 +40,7 @@ class Admin extends MX_Controller
         $output = $this->template->loadPage("admin.tpl", $data);
         $content = $this->administrator->box('Mail Campaigns', $output);
 
-        $this->administrator->view($content, false, "modules/massmail/js/admin.js");
+        $this->administrator->view($content, false, "modules/massmail/js/admin.js?v=1.1");
     }
 
     public function settings()
@@ -61,7 +61,7 @@ class Admin extends MX_Controller
         $output = $this->template->loadPage("settings.tpl", $data);
         $content = $this->administrator->box('Mass Mail Settings', $output);
 
-        $this->administrator->view($content, false, "modules/massmail/js/admin.js");
+        $this->administrator->view($content, false, "modules/massmail/js/admin.js?v=1.1");
     }
 
     public function log()
@@ -333,6 +333,8 @@ class Admin extends MX_Controller
         $config['SMTPPass'] = $this->input->post('massmail_smtp_pass');
         $config['SMTPPort'] = (int)$this->input->post('massmail_smtp_port');
         $config['SMTPCrypto'] = $this->input->post('massmail_smtp_crypto');
+        $config['timeout'] = 5; // CI4 timeout
+        $config['smtp_timeout'] = 5; // CI3 specific
 
         // Verify if we have values
         if (empty($config['SMTPHost'])) {
