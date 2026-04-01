@@ -2,9 +2,9 @@
     <div class="col-lg-12">
         <section class="card border-0 shadow-sm bg-dark text-white overflow-hidden mb-4" style="border-radius: 15px;">
             <header class="card-header border-0 p-4" style="background: linear-gradient(90deg, #1a237e 0%, #3949ab 100%);">
-                <div class="card-actions d-flex gap-2">
-                    <a href="{$url}massmail/admin/settings" class="btn btn-outline-light btn-sm border-0" style="background: rgba(255,255,255,0.1);"><i class="fa fa-cog"></i> Global Settings</a>
-                    <a href="{$url}massmail/admin/create" class="btn btn-light btn-sm fw-bold px-3 text-primary"><i class="fa fa-plus me-1"></i> New Campaign</a>
+                <div class="card-actions" style="position: absolute; right: 15px; top: 25px; display: flex; gap: 10px;">
+                    <a href="{$url}massmail/admin/settings" class="btn btn-outline-light btn-sm border-0" style="background: rgba(255,255,255,0.1); white-space: nowrap;"><i class="fa fa-cog"></i> <span class="d-none d-md-inline">Global Settings</span></a>
+                    <a href="{$url}massmail/admin/create" class="btn btn-light btn-sm fw-bold px-3 text-primary" style="white-space: nowrap;"><i class="fa fa-plus me-1"></i> <span class="d-none d-md-inline">New Campaign</span></a>
                 </div>
                 <h2 class="card-title text-white mb-0" style="font-size: 1.5rem;"><i class="fa fa-envelope-open-text me-2"></i> Mail Campaigns</h2>
             </header>
