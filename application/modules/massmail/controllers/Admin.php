@@ -13,7 +13,9 @@ class Admin extends MX_Controller
         $this->load->model('external_account_model');
         $this->load->helper('email_helper');
 
-        requirePermission("view");
+        if (PHP_SAPI !== 'cli') {
+            requirePermission("view");
+        }
     }
 
     public function index()
