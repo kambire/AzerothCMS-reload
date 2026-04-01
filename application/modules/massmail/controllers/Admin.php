@@ -13,7 +13,10 @@ class Admin extends MX_Controller
         $this->load->model('external_account_model');
         $this->load->helper('email_helper');
 
-        if (PHP_SAPI !== 'cli') {
+        // Allow Cron execution via CLI or via URL with a secret key
+        $is_cron = (PHP_SAPI === 'cli' || ($this->input->get('cron_key') && $this->input->get('cron_key') === $this->config->item('massmail_cron_key')));
+        
+        if (!$is_cron) {
             requirePermission("view");
         }
 
@@ -186,8 +189,16 @@ class Admin extends MX_Controller
      * Should be called via CLI or a cron job every 5-10 minutes.
      * Example: php index.php massmail admin process_queue
      */
-    public function process_queue()
+    public function process_queue($url_key = null)
     {
+        // Check secret key if not in CLI
+        if (PHP_SAPI !== 'cli') {
+            $key = $url_key ?: $this->input->get('cron_key');
+            if (!$key || $key !== $this->config->item('massmail_cron_key')) {
+                die("Unauthorized: Invalid Cron Key.");
+            }
+        }
+
         $campaigns = $this->massmail_model->getPendingCampaigns();
 
         foreach ($campaigns as $campaign) {

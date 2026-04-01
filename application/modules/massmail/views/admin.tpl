@@ -86,11 +86,11 @@
             </div>
         </section>
 
-        <div class="card border-0 shadow-sm bg-dark p-4" style="border-radius: 15px; border-left: 5px solid #1e88e5 !important;">
-            <h5 class="text-primary fw-bold mb-2"><i class="fa fa-info-circle me-1"></i> Cron Process Automation</h5>
-            <p class="text-muted small mb-3">To ensure your message queue is processed reliably without keeping this window open, please register the following task in your server crontab (e.g., via <code>crontab -e</code>):</p>
+        <div class="card border-0 shadow-sm bg-dark p-4" style="border-radius: 15px; border-left: 5px solid #c62828 !important;">
+            <h5 class="text-danger fw-bold mb-2"><i class="fa fa-exclamation-triangle me-1"></i> Cron Process Automation (URL Method)</h5>
+            <p class="text-muted small mb-3">Since the server CLI environment has framework restrictions, use the following <code>curl</code> command to automate the queue via URL securely:</p>
             <div class="bg-black p-3 rounded d-flex justify-content-between align-items-center mb-0">
-                <code class="text-success fw-bold" id="cron_command">*/10 * * * * php {$index_path} massmail admin process_queue</code>
+                <code class="text-success fw-bold" id="cron_command">*/10 * * * * curl -s "{$url}massmail/admin/process_queue/AzerothCronSecret2026" > /dev/null</code>
                 <button class="btn btn-xs btn-outline-secondary border-0" onclick="copyToClipboard()"><i class="fa fa-copy"></i> Copy</button>
             </div>
         </div>
