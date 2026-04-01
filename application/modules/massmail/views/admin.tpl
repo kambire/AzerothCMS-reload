@@ -66,5 +66,5 @@
 
 <div class="alert alert-info mt-4">
     <strong>Note:</strong> To process the queue automatically, you should add a cron job to your server:<br>
-    <code>*/10 * * * * php /var/www/html/index.php massmail admin process_queue</code>
+    <code>*/10 * * * * php {$index_path} massmail admin process_queue</code>
 </div>

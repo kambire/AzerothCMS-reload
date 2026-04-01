@@ -24,7 +24,8 @@ class Admin extends MX_Controller
 
         $data = [
             'url' => $this->template->page_url,
-            'campaigns' => $campaigns
+            'campaigns' => $campaigns,
+            'index_path' => FCPATH . 'index.php'
         ];
 
         $output = $this->template->loadPage("admin.tpl", $data);
