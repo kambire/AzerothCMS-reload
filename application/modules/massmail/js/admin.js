@@ -10,10 +10,9 @@ var Massmail = {
             massmail_smtp_user: $('input[name="massmail_smtp_user"]').val(),
             massmail_smtp_pass: $('input[name="massmail_smtp_pass"]').val(),
             massmail_smtp_port: $('input[name="massmail_smtp_port"]').val(),
-            massmail_smtp_crypto: $('select[name="massmail_smtp_crypto"]').val()
+            massmail_smtp_crypto: $('select[name="massmail_smtp_crypto"]').val(),
+            csrf_token_name: Config.CSRF
         };
-        
-        data[Config.CSRF] = $.cookie('csrf_cookie_name');
         
         $.post(Config.URL + "massmail/admin/test_smtp", data, function(response) {
             button.prop('disabled', false).html(originalHtml);
