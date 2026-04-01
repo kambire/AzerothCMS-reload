@@ -319,6 +319,9 @@ class Admin extends MX_Controller
      */
     public function test_smtp()
     {
+        // Increase time limit for slow SMTP servers
+        set_time_limit(60);
+
         $config = [];
         $config['mailType'] = 'html';
         $config['charset'] = 'UTF-8';
@@ -331,16 +334,23 @@ class Admin extends MX_Controller
         $config['SMTPPort'] = (int)$this->input->post('massmail_smtp_port');
         $config['SMTPCrypto'] = $this->input->post('massmail_smtp_crypto');
 
+        // Verify if we have values
+        if (empty($config['SMTPHost'])) {
+            die(json_encode(['status' => 0, 'msg' => 'SMTP Host is required.']));
+        }
+
         $email = \App\Config\Services::email();
         $email->initialize($config);
 
-        $email->setFrom($config['SMTPUser'], 'SMTP Test');
-        $email->setTo($config['SMTPUser']);
+        $from_email = $config['SMTPUser'] ?: 'test@localhost';
+        
+        $email->setFrom($from_email, 'SMTP Test');
+        $email->setTo($from_email);
         $email->setSubject('Massmail SMTP Test');
         $email->setMessage('This is a test email to verify your dedicated massmail SMTP settings.');
 
         if ($email->send()) {
-            die(json_encode(['status' => 1, 'msg' => 'SMTP connection successful! Test email sent.']));
+            die(json_encode(['status' => 1, 'msg' => 'SMTP connection successful! Test email sent to ' . $from_email]));
         } else {
             $error = $email->printDebugger(['headers']);
             die(json_encode(['status' => 0, 'msg' => $error]));

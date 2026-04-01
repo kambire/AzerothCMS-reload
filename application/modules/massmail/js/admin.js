@@ -10,9 +10,10 @@ var Massmail = {
             massmail_smtp_user: $('input[name="massmail_smtp_user"]').val(),
             massmail_smtp_pass: $('input[name="massmail_smtp_pass"]').val(),
             massmail_smtp_port: $('input[name="massmail_smtp_port"]').val(),
-            massmail_smtp_crypto: $('select[name="massmail_smtp_crypto"]').val(),
-            csrf_token_name: $.cookie('csrf_cookie_name')
+            massmail_smtp_crypto: $('select[name="massmail_smtp_crypto"]').val()
         };
+        
+        data[Config.CSRF] = $.cookie('csrf_cookie_name');
         
         $.post(Config.URL + "massmail/admin/test_smtp", data, function(response) {
             button.prop('disabled', false).html(originalHtml);
@@ -33,6 +34,9 @@ var Massmail = {
                 Swal.fire('Error', 'Invalid response from server.', 'error');
                 console.log(response);
             }
+        }).fail(function() {
+            button.prop('disabled', false).html(originalHtml);
+            Swal.fire('Error', 'Server error or timeout. Please check your SMTP settings and server reachability.', 'error');
         });
     }
 };
