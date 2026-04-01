@@ -78,4 +78,25 @@ class Massmail_model extends CI_Model
         $query = $this->db->query("SELECT * FROM mail_campaigns WHERE status = 'sending'");
         return $query->getResultArray();
     }
+
+    public function logError($campaign_id, $email, $message)
+    {
+        $this->db->table('mail_errors')->insert([
+            'campaign_id' => $campaign_id,
+            'email' => $email,
+            'error_message' => $message,
+            'timestamp' => time()
+        ]);
+    }
+
+    public function getErrors($limit = 50)
+    {
+        $query = $this->db->query("SELECT * FROM mail_errors ORDER BY id DESC LIMIT ?", [(int)$limit]);
+        return $query->getResultArray();
+    }
+
+    public function clearErrors()
+    {
+        $this->db->table('mail_errors')->emptyTable();
+    }
 }

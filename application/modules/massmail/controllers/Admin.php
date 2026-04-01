@@ -56,6 +56,30 @@ class Admin extends MX_Controller
         $this->administrator->view($content);
     }
 
+    public function log()
+    {
+        $this->administrator->setTitle("Mass Mail Error Log");
+
+        $errors = $this->massmail_model->getErrors();
+
+        $data = [
+            'url' => $this->template->page_url,
+            'errors' => $errors
+        ];
+
+        $output = $this->template->loadPage("log.tpl", $data);
+        $content = $this->administrator->box('Mail Server Debugger', $output);
+
+        $this->administrator->view($content);
+    }
+
+    public function clear_log()
+    {
+        $this->massmail_model->clearErrors();
+        header('Location: ' . $this->template->page_url . 'massmail/admin/log');
+        exit;
+    }
+
     public function save_settings()
     {
         $fusionConfig = new ConfigEditor("application/config/fusion.php");
@@ -188,6 +212,9 @@ class Admin extends MX_Controller
                 }
                 else {
                     $this->massmail_model->updateQueueStatus($item['id'], 'failed');
+                    
+                    // Log the technical error for the administrator
+                    $this->massmail_model->logError($campaign['id'], $item['email'], (string)$status);
                 }
             }
 
