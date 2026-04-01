@@ -16,6 +16,8 @@ class Admin extends MX_Controller
         if (PHP_SAPI !== 'cli') {
             requirePermission("view");
         }
+
+        require_once('application/libraries/ConfigEditor.php');
     }
 
     public function index()
@@ -27,7 +29,9 @@ class Admin extends MX_Controller
         $data = [
             'url' => $this->template->page_url,
             'campaigns' => $campaigns,
-            'index_path' => FCPATH . 'index.php'
+            'index_path' => FCPATH . 'index.php',
+            'default_emails_per_hour' => $this->config->item('massmail_default_emails_per_hour'),
+            'sender_name' => $this->config->item('massmail_sender_name')
         ];
 
         $output = $this->template->loadPage("admin.tpl", $data);
@@ -36,12 +40,43 @@ class Admin extends MX_Controller
         $this->administrator->view($content, false, "modules/massmail/js/admin.js");
     }
 
+    public function settings()
+    {
+        $this->administrator->setTitle("Mass Mail Settings");
+
+        $data = [
+            'url' => $this->template->page_url,
+            'default_emails_per_hour' => $this->config->item('massmail_default_emails_per_hour'),
+            'sender_name' => $this->config->item('massmail_sender_name')
+        ];
+
+        $output = $this->template->loadPage("settings.tpl", $data);
+        $content = $this->administrator->box('Mass Mail Settings', $output);
+
+        $this->administrator->view($content);
+    }
+
+    public function save_settings()
+    {
+        $fusionConfig = new ConfigEditor("application/config/fusion.php");
+
+        $fusionConfig->set('massmail_default_emails_per_hour', (int)$this->input->post('default_emails_per_hour'));
+        $fusionConfig->set('massmail_sender_name', $this->input->post('sender_name'));
+
+        $fusionConfig->save();
+
+        header('Location: ' . $this->template->page_url . 'massmail/admin');
+        exit;
+    }
+
     public function create()
     {
         $this->administrator->setTitle("Create Campaign");
 
         $data = [
-            'url' => $this->template->page_url
+            'url' => $this->template->page_url,
+            'default_emails_per_hour' => $this->config->item('massmail_default_emails_per_hour'),
+            'sender_name' => $this->config->item('massmail_sender_name')
         ];
 
         $output = $this->template->loadPage("create.tpl", $data);
