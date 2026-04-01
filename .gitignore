@@ -26,7 +26,8 @@ application/config/owner.php
 # WRITABLE - Archivos generados por la app (uploads, sesiones, cache)
 # -------------------------------------------------------------------
 writable/*
-!writable/.gitkeep
+!writable/**/.gitkeep
+!writable/**/index.html
 
 # -------------------------------------------------------------------
 # DOCKER - Dumps de datos reales (pueden contener info personal)
